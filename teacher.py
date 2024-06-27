@@ -53,4 +53,19 @@ class Teacher:
 
     # membership query
     def member(self, s):
-        pass
+
+        input = []
+
+        # Convert passed string into an array of ints, where each int is the index in the alphabet array corresponding to that character
+        for char in s:
+            input.append(self.alphabet.index(char))
+        
+        # Enter the DFA (M) at node 0
+        node_index = 0
+
+        # Navigate through the DFA to the final state
+        for char_index in input:
+            node_index = self.m[node_index][char_index + 1]
+        
+        # Return the int boolean indicating if the final state is an accept or reject state
+        return self.m[node_index][0]
