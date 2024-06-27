@@ -6,19 +6,24 @@ from teacher import Teacher
 class Learner:
 
     def __init__(self):
+        # intialize alphabet and teacher
+        self.alphabet = [0,1]
+        self.my_teacher = Teacher(self.alphabet)
+
         # initialize T with just the empty string (lambda)
         # create M_hat with just one state in T
         # equivalence query on initial M_hat
         # put counterexample gamma into our tree T
-
-        # TODO: alphabet created in learner and passed to teacher for teacher's constructor
 
         # call lstar_algorithm
         pass
 
 
     def lstar_algorithm(self, teacher):
-        # loop:
+        print("running l-star")
+
+        unsolved = True
+        # while loop (while unsolved):
             # create new M_hat from current T => call construct_hypothesis
             # equivalence query => does our current M_hat equal the real M from teacher?
             # if yes we are done

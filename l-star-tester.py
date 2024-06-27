@@ -1,1 +1,7 @@
-# Create learner and let it run
+from learner import Learner
+
+# Create learner
+my_learner = Learner()
+
+# Let learner run
+my_learner.run()
