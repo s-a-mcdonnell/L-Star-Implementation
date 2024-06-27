@@ -52,6 +52,7 @@ class Teacher:
         pass
 
     # membership query
+    # takes a string s and returns an int boolean (0 or 1) indicating whether s is accepted or rejected by the DFA (M)
     def member(self, s):
 
         input = []
