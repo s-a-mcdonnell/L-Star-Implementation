@@ -4,4 +4,4 @@ from learner import Learner
 my_learner = Learner()
 
 # Let learner run
-my_learner.run()
+my_learner.lstar_algorithm()
