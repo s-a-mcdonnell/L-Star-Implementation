@@ -49,14 +49,27 @@ class Teacher:
 
     # equivalency query
     # takes the DFA hypothesis m_hat
-    # returns either a counterexample or True (indicating that the DFAs match)
+    # returns either a counterexample or False (indicating that the DFAs match)
     def equivalent(self, m_hat):
 
         # Generate an arbitrarily large number of strings
+        strings = []*1000000
+        for s in strings:
+            s = ""
+            
+            # NOTE: The choice of maximum length of a string is arbitrary
+            # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
+            for i in range(0, random.randint(0, 1000)):
+                s += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
+            # TODO: Generate these strings
 
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
-        # else return true
-        pass
+        for s in strings:
+            if not self.member(s) == self.member(s, m_hat):
+                return s
+
+        # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
+        return False
 
     # membership query
     # takes a string s and returns an int boolean (0 or 1) indicating whether s is accepted or rejected by the given DFA
