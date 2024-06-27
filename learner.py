@@ -14,8 +14,7 @@ class Learner:
         # create M_hat with just one state in T
         # equivalence query on initial M_hat
         # put counterexample gamma into our tree T
-
-        # call lstar_algorithm
+        
         pass
 
 
