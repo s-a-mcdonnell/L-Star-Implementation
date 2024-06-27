@@ -24,9 +24,15 @@ class Teacher:
         print("num_nodes = " + str(num_nodes))
         print("alphabet size = " + str(len(alphabet)))
         print("M has " + str(len(self.m)) + " rows and " + str(len(self.m[0])) + " columns")
+        
+        arrows_created = 0
+        # Set each arrow in each node to point at a random node
+        for node in self.m:
+            for arrow in node:
+                arrow = random.randint(0, num_nodes - 1)
+                arrows_created += 1
 
-        pass
-
+        print("arrows created: " + str(arrows_created))
 
     # equivalency query
     def equivalent(self, m_hat):
