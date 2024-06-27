@@ -14,7 +14,7 @@ class Teacher:
         random.seed(1821)
 
         # Determine the number of states in the DFA (between 1 and 100, inclusive)
-        # NOTE: The upper limit here is arbitrarily chosed
+        # NOTE: The upper limit here is arbitrarily chosen
         num_nodes = random.randint(1, 100)
 
         # The DFA (M) is a matrix in which the rows are the nodes
