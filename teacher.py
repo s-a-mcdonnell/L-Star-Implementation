@@ -48,12 +48,23 @@ class Teacher:
         print("reject states created: " + str(reject_states))
 
     # equivalency query
+    # takes the DFA hypothesis m_hat
+    # returns either a counterexample or True (indicating that the DFAs match)
     def equivalent(self, m_hat):
+
+        # Generate an arbitrarily large number of strings
+
+        # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
+        # else return true
         pass
 
     # membership query
-    # takes a string s and returns an int boolean (0 or 1) indicating whether s is accepted or rejected by the DFA (M)
-    def member(self, s):
+    # takes a string s and returns an int boolean (0 or 1) indicating whether s is accepted or rejected by the given DFA
+    def member(self, s, dfa = None):
+
+        # Default DFA is m
+        if not dfa:
+            dfa = self.m
 
         input = []
 
@@ -66,7 +77,7 @@ class Teacher:
 
         # Navigate through the DFA to the final state
         for char_index in input:
-            node_index = self.m[node_index][char_index + 1]
+            node_index = dfa[node_index][char_index + 1]
         
         # Return the int boolean indicating if the final state is an accept or reject state
-        return self.m[node_index][0]
+        return dfa[node_index][0]
