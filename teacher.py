@@ -20,7 +20,14 @@ class Teacher:
         # The DFA (M) is a matrix in which the rows are the nodes
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
-        self.m = [[-1]*(len(alphabet)+1)]*num_nodes
+        self.m = []
+        
+        # Initialize all values in M to -1 (invalid)
+        for i in range(num_nodes):
+            new_node = []
+            self.m.append(new_node)
+            for j in range(len(alphabet) + 1):
+                self.m[i].append(-1)
         
         print("num_nodes = " + str(num_nodes))
         print("alphabet size = " + str(len(alphabet)))
@@ -41,6 +48,7 @@ class Teacher:
             # The subsequent entries indicate which node a given alphabet value directs to
             for i in range(1, len(node)):
                 arrow = random.randint(0, num_nodes - 1)
+                node[i] = arrow
                 arrows_created += 1
 
         print("arrows created: " + str(arrows_created))
