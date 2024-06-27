@@ -18,7 +18,7 @@ class Learner:
         pass
 
 
-    def lstar_algorithm(self, teacher):
+    def lstar_algorithm(self):
         print("running l-star")
 
         unsolved = True
