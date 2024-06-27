@@ -55,7 +55,13 @@ class Teacher:
         # Generate an arbitrarily large number of strings
         strings = []*1000000
         for s in strings:
-            pass
+            s = ""
+            
+            # NOTE: The choice of maximum length of a string is arbitrary
+            # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
+            for i in range(0, random.randint(0, 1000)):
+                s += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
+            # TODO: Generate these strings
 
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
         for s in strings:
