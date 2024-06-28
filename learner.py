@@ -144,16 +144,13 @@ class Learner:
             # d is distinguishing string at current node
             d = current.value
 
-            # membership query on sd
-            counterexample = self.my_teacher.member(s + d)
-            
-            # if membership query rejected, current node is left child of current node
-            if counterexample:
-                current = current.left_child
-            # else (if accepted), current node is right child of current node
-            else:
-                assert not counterexample
+            # membership query on sd (concatenated) 
+            # if membership query is accepted, current node is right child of current node
+            if self.my_teacher.member(s + d):
                 current = current.right_child
+            # else (if rejected), current node is left child of current node
+            else:
+                current = current.left_child
                     
         # NOTE: We have reached this point because current does not have a left child.
         # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
