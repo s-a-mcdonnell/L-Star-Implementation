@@ -7,6 +7,12 @@ class Learner:
 
     def __init__(self, alphabet = ['0','1']):
 
+        print = Tree(Node("root"))
+        print.root.left_child = Node("left child", print.root)
+        print.root.right_child = Node("right child", print.root)
+        print.print()
+
+
         self.solved = False
         # intialize alphabet and teacher
         # Note that the alphabet must contains characters (one-character strings), not ints
@@ -14,7 +20,7 @@ class Learner:
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
-        t = Tree("")
+        t = Tree(Node(""))
         # lambda is not a variable name in Python due to it being used for function stuff so I'm going to call it 
 
         # create M_hat with just one state in T
@@ -44,12 +50,14 @@ class Learner:
         else:
             print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
-                t.root.rightChild = Node(gamma)
+                t.root.rightChild = Node(gamma, t.root)
                 t.root.leftChild = Node("")
             else:
                 # counterexample is rejected
                 t.root.rightChild = Node("")
-                t.root.leftChild = Node(gamma)
+                t.root.leftChild = Node(gamma, t.root)
+        print("Initialization done")
+        t.print()
 
 
     def lstar_algorithm(self):
@@ -63,6 +71,7 @@ class Learner:
                 # call update_tree
                 # series of membership queries on prefix of counterexample gamma
             pass
+        print("End L-Star algorithm")
 
 
     # input: gamma (a counterexample generated from an equivalence query) and our tree T
@@ -112,15 +121,28 @@ class Node:
         self.parent = parent
 
         # always have 0 or 2 children, never only 1 child, due to distinguishing string logistics
-        self.leftChild = None
-        self.rightChild = None
+        self.left_child = None
+        self.right_child = None
 
 
-# TODO: implement regular silly tree :)
 class Tree:
 
     def __init__(self, root: Node):
         self.root = root
 
     # other methods go here ie sorting stuff
-        
+    def print(self):
+        stack = []
+        stack.append(self.root)
+        while stack:
+            to_print = stack.pop()
+            # append right child first so the left child gets printed first
+            if to_print.right_child is not None:
+                stack.append(to_print.right_child)
+            if to_print.left_child is not None:
+                stack.append(to_print.left_child)
+            n = to_print
+            while n.parent is not None:
+                print("\t", end="")
+                n = n.parent
+            print(to_print.value)
