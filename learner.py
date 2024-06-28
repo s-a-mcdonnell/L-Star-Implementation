@@ -139,14 +139,31 @@ class Learner:
     def sift(self, s):
         # set current node to root of T
         current = self.t.root
-        # loop:
+
+        # Loop as long as current has a left child (that is, as long as current is not a leaf)
+        while (current.left_child):
+                        
             # d is distinguishing string at current node
+            d = current.value
+
             # membership query on sd
-                # if accepted, current node is right child of current node
-                # else if rejected, current node is left child of current node
-            # after updating current node's position, if current node is a leaf node, return access string
-            # otherwise, repeat loop
-        pass
+            counterexample = self.my_teacher.member(s + d)
+            
+            # if membership query rejected, current node is left child of current node
+            if counterexample:
+                current = current.left_child
+            # else (if accepted), current node is right child of current node
+            else:
+                assert not counterexample
+                current = current.right_child
+                    
+        # NOTE: We have reached this point because current does not have a left child.
+        # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
+        assert not current.right_child
+
+        # Return the access string at the leaf found
+        return current.value
+
 
 class Node:
 
