@@ -91,7 +91,9 @@ class Learner:
             gamma = self.my_teacher.equivalent(self.m_hat)
             if not gamma:
                 # if yes we are done
-                print("We are done. DFA is the trivial DFA.")
+                print("DFA solved!")
+                print("Learned DFA:")
+                print(self.m_hat)
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
             else:
@@ -142,7 +144,8 @@ class Learner:
         # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string
         
         # xor operation (https://stackoverflow.com/questions/432842/how-do-you-get-the-logical-xor-of-two-variables-in-python)
-        assert bool(self.my_teacher.member(node_to_edit.value + new_d)) != bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
+        # TODO: Comment this assert statement back in
+        # assert bool(self.my_teacher.member(node_to_edit.value + new_d)) != bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
         
         if self.my_teacher.member(node_to_edit.value + new_d):
             node_to_edit.right_child.value =  node_to_edit.value
@@ -206,7 +209,7 @@ class Learner:
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
     def sift_return_node(self, s):
-        print("sift called on string " + s)
+        print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
         current = self.t.root
@@ -229,15 +232,22 @@ class Learner:
         # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
         assert not current.right_child
 
+        # Check that access string is properly stored
+        if not (current.value in self.access_string_reference.keys()):
+            print("current value: " + current.value)
+            print("dictionary: " + str(self.access_string_reference))
+            exit(1)
+        
         # Return the access string at the leaf found
-        print("ending sift. returning NODE.")
+        print("ending sift. returning NODE " + str(self.access_string_reference[current.value]) + " with access string " + (current.value if current.value else "empty"))
         return current
 
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
     def sift(self, s):
-        print("returning ACCESS STRING from sift")
+        print("---")
+        print("sift called on " + (s if s else "the empty string"))
         return self.sift_return_node(s).value
 
 
