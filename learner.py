@@ -78,14 +78,21 @@ class Learner:
             # otherwise, repeat loop
         pass
 
+class Node:
+
+    def __init__(self, value, parent = None):
+        self.value = value
+
+        self.parent = parent
+
+        # always have 0 or 2 children, never only 1 child, due to distinguishing string logistics
+        self.leftChild = None
+        self.rightChild = None
+
 
 # TODO: implement regular silly tree :)
 class Tree:
 
-    def __init__(self):
-        pass
-
-class Node:
-
-    def __init__(self):
-        pass
+    def __init__(self, root: Node):
+        self.root = root
+        
