@@ -5,7 +5,8 @@ from teacher import Teacher
 
 class Learner:
 
-    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs 
+    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs
+    # TODO: NOTHING IS TESTED except for init :)
 
     def __init__(self, alphabet = ['0','1']):
 
@@ -91,6 +92,7 @@ class Learner:
 
     # input: gamma (a counterexample generated from an equivalence query) and our tree T
     # output: an updated tree T
+    # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
         # for each prefix set of characters of gamma
         j = ""
@@ -113,12 +115,14 @@ class Learner:
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
         to_become = [[-1]*(len(self.alphabet)+1)]
+
         # for each access string (leaf) of T, create a state in M_hat
         for key in self.access_string_reference:
             to_append = []
             for i in range(len(self.alphabet) + 1):
                 to_append.append(0)
             to_become.append(to_append)
+
         # start state of M_hat is gamma, the empty string
         # for each state in M_hat and each symbol b in the language, compute the b-transition out of s:
         for key in self.access_string_reference:
@@ -129,6 +133,7 @@ class Learner:
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
                 to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
+
         self.m_hat = to_become
 
 
