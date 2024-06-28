@@ -57,6 +57,10 @@ class Teacher:
     # takes the DFA hypothesis m_hat
     # returns either a counterexample or False (indicating that the DFAs match)
     def equivalent(self, m_hat):
+        if len(self.m[0]) != len(m_hat[0]):
+            print("Incompatable alphabet size")
+            return True
+
         # print("equivalency query called")
 
         # Generate and test an arbitrarily large number of strings
