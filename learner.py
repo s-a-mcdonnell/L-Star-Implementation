@@ -65,6 +65,13 @@ class Learner:
                 self.t.root.right_child = Node("", self.t.root)
                 self.t.root.left_child = Node(gamma, self.t.root)
             self.access_string_reference.update({gamma: 1})
+
+        # Confirm that all -1s have been overwritten
+        for row in self.m_hat:
+            for entry in row:
+                assert entry >= 0
+
+
         print("Initialization done")
         # t.print_tree()
         # print("tree printed")

@@ -56,5 +56,11 @@ print("right child exists: " + str(bool(my_learner.t.root.right_child)))
 
 my_learner.t.print_tree()
 
+print(my_learner.m_hat)
+
+hypothesis = my_learner.construct_hypothesis()
+
+print(hypothesis)
+
 
 
