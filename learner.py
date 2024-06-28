@@ -18,7 +18,8 @@ class Learner:
         if key in self.access_string_reference.keys():
             print("trying to clobber key " + key)
             self.sift(key)
-            exit(1)
+            #exit(1)
+            assert not key in self.access_string_reference.keys()
 
         self.access_string_reference.update({key : index})
 
