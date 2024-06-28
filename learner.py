@@ -126,7 +126,9 @@ class Learner:
             for b in self.alphabet:
                 resulting_state = self.sift(key + b)
                 # direct the b-transition out of s to the resulting sifted state in M_hat
-
+                to_direct = self.access_string_reference[resulting_state]
+                # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
+                to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
         self.m_hat = to_become
 
 
