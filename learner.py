@@ -90,25 +90,58 @@ class Learner:
         print("End L-Star algorithm")
 
 
-    # input: gamma (a counterexample generated from an equivalence query) and our tree T
-    # output: an updated tree T
+    # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
+    # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
         # for each prefix set of characters of gamma
-        j = ""
         for i in range(len(gamma)):
-            strng = gamma[0: i + 1]
+            # Get the first i characters of gamma
+            strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            self.sift(strng)
-            # repeat until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
-            # TODO: a little confused on how to implement this part
+            access_string = self.sift(strng)
+
+            # check if the returned access string accepts or rejects in M and M_hat
+            # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
+            if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
+                break
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
+
+        # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
+        j = i
+        gamma_j_minus_1 = gamma[0 : j]
+
+        # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
+        node_to_edit = self.sift_return_node(gamma_j_minus_1)
+
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
-            # leaf nodes are the previous access string and the new access string gamma[j-1]
-            # the internal node is distinguishing CHARACTER gamma_j appended with d where d is the parent distinguishing string
-        # return new tree and/or edit self.t
+        # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
+        new_d = gamma[j] + node_to_edit.parent.value
+    
+        # Children child leaves for node_to_edit, making it an internal node
+        assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
+        node_to_edit.left_child = Node(None, node_to_edit)
+        node_to_edit.right_child = Node(None, node_to_edit)
+    
+        # Set values of node_to_edit's children
+        # leaf nodes are the previous access string and the new access string gamma[j-1]
+        # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string
+        
+        # xor operation (https://stackoverflow.com/questions/432842/how-do-you-get-the-logical-xor-of-two-variables-in-python)
+        assert bool(self.my_teacher.member(node_to_edit.value + new_d)) != bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
+        
+        if self.my_teacher.member(node_to_edit.value + new_d):
+            node_to_edit.right_child.value =  node_to_edit.value
+            node_to_edit.left_child.value = gamma_j_minus_1
+        else:
+            node_to_edit.right_child.value = gamma_j_minus_1
+            node_to_edit.left_child.value =  node_to_edit.value
+
+        # Set node_to_edit's value to be the new distinguishing string
+        assert node_to_edit.parent
+        node_to_edit.value = new_d
 
 
     # input: T is our classification tree
@@ -136,10 +169,10 @@ class Learner:
 
         self.m_hat = to_become
 
-
     # input: s is the string being sifted and T is our tree
-    # output: access string in T for the state of M accessed by s
-    def sift(self, s):
+    # output: leaf NODE (not access string) in T for the state of M accessed by s
+    def sift_return_node(self, s):
+        
         # set current node to root of T
         current = self.t.root
 
@@ -162,7 +195,13 @@ class Learner:
         assert not current.right_child
 
         # Return the access string at the leaf found
-        return current.value
+        return current
+
+
+    # input: s is the string being sifted and T is our tree
+    # output: access string in T for the state of M accessed by s
+    def sift(self, s):
+        return self.sift_return_node(s).value
 
 
 class Node:
