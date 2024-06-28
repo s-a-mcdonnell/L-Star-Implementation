@@ -30,9 +30,9 @@ class Teacher:
             for j in range(len(alphabet) + 1):
                 self.m[i].append(-1)
         
-        print("num_nodes = " + str(num_nodes))
-        print("alphabet size = " + str(len(alphabet)))
-        print("M has " + str(len(self.m)) + " rows and " + str(len(self.m[0])) + " columns")
+        # print("num_nodes = " + str(num_nodes))
+        # print("alphabet size = " + str(len(alphabet)))
+        # print("M has " + str(len(self.m)) + " rows and " + str(len(self.m[0])) + " columns")
         
         arrows_created = 0
         accept_states = 0
@@ -52,25 +52,20 @@ class Teacher:
                 node[i] = arrow
                 arrows_created += 1
 
-        print("arrows created: " + str(arrows_created))
-        print("accept states created: " + str(accept_states))
-        print("reject states created: " + str(reject_states))
+        # print("arrows created: " + str(arrows_created))
+        # print("accept states created: " + str(accept_states))
+        # print("reject states created: " + str(reject_states))
 
     # equivalency query
     # takes the DFA hypothesis m_hat
     # returns either a counterexample or False (indicating that the DFAs match)
     def equivalent(self, m_hat):
+        print("equivalency query called")
 
         # Generate an arbitrarily large number of strings
-        strings = []*1000000
-        for s in strings:
-            s = ""
-            
-            # NOTE: The choice of maximum length of a string is arbitrary
-            # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
-            for i in range(0, random.randint(0, 1000)):
-                s += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
-            # TODO: Generate these strings
+        strings = []
+        for i in range(10):
+            strings.append(self.generate_string())
 
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
         for s in strings:
@@ -83,7 +78,7 @@ class Teacher:
     # membership query
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
     @staticmethod
-    def member(s, dfa, alpha):
+    def member(s, dfa: list[list[int]], alpha):
 
         input = []
 
@@ -92,16 +87,30 @@ class Teacher:
             input.append(alpha.index(char))
         
         # Enter the DFA (M) at node 0
-        node_index = 0
+        next_node_index = 0
 
         # Navigate through the DFA to the final state
         for char_index in input:
-            node_index = dfa[node_index][char_index + 1]
+            current_node : list[int] = dfa[next_node_index]
+            next_node_index = current_node[char_index + 1]
         
         # Return the int boolean indicating if the final state is an accept or reject state
-        return bool(dfa[node_index][0])
+        return bool(dfa[next_node_index][0])
     
     # Non-static version of membership query
     def __member(self, s):
         return Teacher.member(s, self.m, self.alphabet)
 
+
+    def generate_string(self):
+        print("generate_string called")
+
+        strg = ""
+            
+        # NOTE: The choice of maximum length of a string is arbitrary
+        # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
+        for i in range(0, random.randint(0, 10)):
+            strg += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
+        
+        print("string generated: " + strg)
+        return strg
