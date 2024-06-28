@@ -3,7 +3,7 @@ import random
 class Teacher:
 
     # Constructor
-    def __init__(self, alphabet, num_nodes = -1, seed = 1821):
+    def __init__(self, alphabet, num_states = -1, seed = 1821):
         print("teacher created")
 
         # The teacher will use the provided alphabet
@@ -21,37 +21,37 @@ class Teacher:
         # Determine the number of states in the DFA (between 1 and 100, inclusive)
         # NOTE: The upper limit here is arbitrarily chosen
         # NOTE: Not all of these will be accessible, depending on how the arrows point
-        if num_nodes == -1:
-            num_nodes = random.randint(1, 100)
+        if num_states == -1:
+            num_states = random.randint(1, 100)
 
-        # The DFA (M) is a matrix in which the rows are the nodes
-        # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
-        # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
+        # The DFA (M) is a matrix in which the rows are the states
+        # The first entry in each row is a boolean in int form (0 or 1) indicating whether the state is an accept (1) or reject (0) state
+        # The remaining entries in each row are the numbers of the states which the corresponding alphabet value at that index points to
         self.m = []
         
         # Initialize all values in M to -1 (invalid)
-        for i in range(num_nodes):
-            new_node = []
-            self.m.append(new_node)
+        for i in range(num_states):
+            new_state = []
+            self.m.append(new_state)
             for j in range(len(alphabet) + 1):
                 self.m[i].append(-1)
 
         arrows_created = 0
         accept_states = 0
         reject_states = 0
-        # Set each arrow in each node to point at a random node
-        for node in self.m:
-            # The first entry in each node is a boolean indicating whether the node is an accept or reject state
-            node[0] = random.randint(0, 1)
-            if node[0]:
+        # Set each arrow in each state to point at a random state
+        for state in self.m:
+            # The first entry in each state is a boolean indicating whether it is an accept or reject state
+            state[0] = random.randint(0, 1)
+            if state[0]:
                 accept_states += 1
             else:
                 reject_states += 1
 
-            # The subsequent entries indicate which node a given alphabet value directs to
-            for i in range(1, len(node)):
-                arrow = random.randint(0, num_nodes - 1)
-                node[i] = arrow
+            # The subsequent entries indicate which state a given alphabet value directs to
+            for i in range(1, len(state)):
+                arrow = random.randint(0, num_states - 1)
+                state[i] = arrow
                 arrows_created += 1
         
         # Print DFA
@@ -98,16 +98,16 @@ class Teacher:
         for char in s:
             input.append(alpha.index(char))
         
-        # Enter the DFA (M) at node 0
-        next_node_index = 0
+        # Enter the DFA (M) at state 0
+        next_state_index = 0
 
         # Navigate through the DFA to the final state
         for char_index in input:
-            current_node : list[int] = dfa[next_node_index]
-            next_node_index = current_node[char_index + 1]
+            current_state : list[int] = dfa[next_state_index]
+            next_state_index = current_state[char_index + 1]
         
         # Return the int boolean indicating if the final state is an accept or reject state
-        return bool(dfa[next_node_index][0])
+        return bool(dfa[next_state_index][0])
 
     def generate_string(self):
 

@@ -30,7 +30,8 @@ class Learner:
         # The DFA (M) is a matrix in which the rows are the nodes
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
-        self.m_hat = [[-1]*(len(self.alphabet)+1)]
+        # TODO: Replace with = [[]] ?
+        self.m_hat = []
 
         # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
         # add to the dictionary when updating the tree, not when reconstructing m_hat, because we need dict to construct m_hat
@@ -48,7 +49,7 @@ class Learner:
         for i in range(len(self.alphabet)):
             to_append.append(0)
         
-        self.m_hat[0] = to_append
+        self.m_hat.append(to_append)
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
@@ -161,7 +162,8 @@ class Learner:
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
         print("construct hypothesis called")
-        to_become = [[-1]*(len(self.alphabet)+1)]
+        # TODO: Replace with = [[]] ?
+        to_become = []
 
         # for each access string (leaf) of T, create a state in M_hat
         for key in self.access_string_reference:
@@ -211,14 +213,14 @@ class Learner:
         assert not current.right_child
 
         # Return the access string at the leaf found
-        print("ending sift. returning access string.")
+        print("ending sift. returning NODE.")
         return current
 
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
     def sift(self, s):
-        print("returning NODE from sift")
+        print("returning ACCESS STRING from sift")
         return self.sift_return_node(s).value
 
 

@@ -62,5 +62,5 @@ hypothesis = my_learner.construct_hypothesis()
 
 print(hypothesis)
 
-
+print("Is 11111001 a member? " + str(my_learner.my_teacher.member("11111001")))
 
