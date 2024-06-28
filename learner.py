@@ -30,6 +30,7 @@ class Learner:
         self.m_hat = [[-1]*(len(self.alphabet)+1)]
 
         # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
+        # add to the dictionary when updating the tree, not when reconstructing m_hat, because we need dict to construct m_hat
         self.access_string_reference = {}
         self.access_string_reference.update({"": 0})
 
@@ -47,7 +48,6 @@ class Learner:
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
-        print("counterexample: " + gamma)
         if not gamma:
             print("We are done. DFA is the trivial DFA.")
             self.solved = True
@@ -63,9 +63,9 @@ class Learner:
                 t.root.left_child = Node(gamma, t.root)
             self.access_string_reference.update({gamma: 1})
         print("Initialization done")
-        t.print_tree()
-        print("tree printed")
-        print(self.access_string_reference)
+        # t.print_tree()
+        # print("tree printed")
+        # print(self.access_string_reference)
 
 
     def lstar_algorithm(self):
