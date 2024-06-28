@@ -5,6 +5,8 @@ from teacher import Teacher
 
 class Learner:
 
+    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs 
+
     def __init__(self, alphabet = ['0','1']):
 
         test_tree = Tree(Node("root"))
@@ -91,32 +93,48 @@ class Learner:
     # output: an updated tree T
     def update_tree(self, gamma):
         # for each prefix set of characters of gamma
+        j = ""
+        for i in range(len(gamma)):
+            strng = gamma[0: i + 1]
             # sift gamma[i] in T
+            self.sift(strng)
             # repeat until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
+            # TODO: a little confused on how to implement this part
+
         # let j be the least i s.t. s[i] does not equal s_hat[i]
+    
         # replace access string s[j-1] in T with an internal node with two leaf nodes
             # leaf nodes are the previous access string and the new access string gamma[j-1]
             # the internal node is distinguishing CHARACTER gamma_j appended with d where d is the parent distinguishing string
         # return new tree and/or edit self.t
-        pass
 
 
     # input: T is our classification tree
     # output: hypothesis M_hat constructed from T
-    def construct_hypothesis(self, t):
+    def construct_hypothesis(self):
+        to_become = [[-1]*(len(self.alphabet)+1)]
         # for each access string (leaf) of T, create a state in M_hat
+        for key in self.access_string_reference:
+            to_append = []
+            for i in range(len(self.alphabet) + 1):
+                to_append.append(0)
+            to_become.append(to_append)
         # start state of M_hat is gamma, the empty string
         # for each state in M_hat and each symbol b in the language, compute the b-transition out of s:
-            # sift(sb, T)
-            # direct the b-transition out of s to the resulting sifted state in M_hat
-        pass
+        for key in self.access_string_reference:
+            # for each symbol b in the language, sift
+            for b in self.alphabet:
+                resulting_state = self.sift(key + b)
+                # direct the b-transition out of s to the resulting sifted state in M_hat
+
+        self.m_hat = to_become
 
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
-    def sift(self, s, t):
+    def sift(self, s):
         # set current node to root of T
-
+        current = self.t.root
         # loop:
             # d is distinguishing string at current node
             # membership query on sd
