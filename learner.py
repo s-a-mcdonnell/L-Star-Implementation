@@ -104,8 +104,12 @@ class Learner:
             else:
                 assert gamma == str(gamma)
 
+                # call update_tree (includes updating dictionary)
                 self.update_tree(gamma)
-                # call update_tree
+
+                print("number of entries in dictionary: " + str(len(self.access_string_reference)))
+                print("number of rows in M_hat: " + str(len(self.m_hat)))
+
                 self.t.print_tree()
             print("LOOP COMPLETE IN L STAR")
         print("End L-Star algorithm")
@@ -219,6 +223,9 @@ class Learner:
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
                 print("dictionary: " + str(self.access_string_reference))
+                print("key: " + key)
+                print("row index: " + str(self.access_string_reference[key]))
+                print("rows in to_become: " + str(len(to_become)))
                 to_become[self.access_string_reference[key]][self.alphabet.index(b) + 1] = to_direct
 
         # Ensure that all -1s have been overwritten
