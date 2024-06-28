@@ -73,18 +73,23 @@ class Learner:
 
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
+            self.m_hat = self.construct_hypothesis(self.t)
             # equivalence query => does our current M_hat equal the real M from teacher?
-            # if yes we are done
+            gamma = self.my_teacher.equivalent(self.m_hat)
+            if not gamma:
+                # if yes we are done
+                print("We are done. DFA is the trivial DFA.")
+                self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
+            else:
+                self.update_tree(gamma)
                 # call update_tree
-                # series of membership queries on prefix of counterexample gamma
-            pass
         print("End L-Star algorithm")
 
 
     # input: gamma (a counterexample generated from an equivalence query) and our tree T
     # output: an updated tree T
-    def update_tree(self, gamma, t):
+    def update_tree(self, gamma):
         # for each prefix set of characters of gamma
             # sift gamma[i] in T
             # repeat until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
@@ -92,7 +97,7 @@ class Learner:
         # replace access string s[j-1] in T with an internal node with two leaf nodes
             # leaf nodes are the previous access string and the new access string gamma[j-1]
             # the internal node is distinguishing CHARACTER gamma_j appended with d where d is the parent distinguishing string
-        # return new tree
+        # return new tree and/or edit self.t
         pass
 
 
