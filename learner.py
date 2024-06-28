@@ -95,6 +95,7 @@ class Learner:
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
             else:
+                self.access_string_reference.update({gamma: len(self.access_string_reference)})
                 self.update_tree(gamma)
                 # call update_tree
         print("End L-Star algorithm")
