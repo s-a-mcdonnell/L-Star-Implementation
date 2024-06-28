@@ -22,7 +22,7 @@ class Teacher:
         # NOTE: The upper limit here is arbitrarily chosen
         # NOTE: Not all of these will be accessible, depending on how the arrows point
         if num_states == -1:
-            num_states = random.randint(1, 100)
+            num_states = random.randint(1, 40)
 
         # The DFA (M) is a matrix in which the rows are the states
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the state is an accept (1) or reject (0) state

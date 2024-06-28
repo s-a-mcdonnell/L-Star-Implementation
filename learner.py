@@ -74,6 +74,7 @@ class Learner:
         
         print("m_hat at end of initialization: " + str(self.m_hat))
 
+        self.t.print_tree()
 
         print("Initialization done")
         # t.print_tree()
@@ -95,9 +96,10 @@ class Learner:
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
             else:
-                self.access_string_reference.update({gamma: len(self.access_string_reference)})
                 self.update_tree(gamma)
                 # call update_tree
+                self.t.print_tree()
+            print("LOOP COMPLETE IN L STAR")
         print("End L-Star algorithm")
 
 
@@ -106,6 +108,7 @@ class Learner:
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
         print("Update tree called")
+        print("Updating the tree with " + gamma)
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
             # Get the first i characters of gamma
@@ -123,14 +126,16 @@ class Learner:
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
         gamma_j_minus_1 = gamma[0 : j]
+        print("j is " + str(j))
+        print("gamma[j - 1] is " + str(gamma_j_minus_1))
 
         # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
-
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
         new_d = gamma[j] + node_to_edit.parent.value
+        print("New distinguishing string is " + str(new_d))
     
         # Create child leaves for node_to_edit, making it an internal node
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
@@ -142,7 +147,9 @@ class Learner:
         # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string
         
         # xor operation (https://stackoverflow.com/questions/432842/how-do-you-get-the-logical-xor-of-two-variables-in-python)
-        assert bool(self.my_teacher.member(node_to_edit.value + new_d)) != bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
+        sd_vibes = bool(self.my_teacher.member(node_to_edit.value + new_d))
+        s_prime_d = bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
+        assert sd_vibes != s_prime_d
         
         if self.my_teacher.member(node_to_edit.value + new_d):
             node_to_edit.right_child.value =  node_to_edit.value
