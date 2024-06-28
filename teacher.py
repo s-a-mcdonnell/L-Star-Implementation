@@ -9,6 +9,12 @@ class Teacher:
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
 
+        # Check the alphabet for validity (each symbol is just one character)
+        for symbol in alphabet:
+            if len(symbol) != 1:
+                print("Error: Invalid alphabet")
+                exit(1)
+
         # Using this guide to PRN generation in Python: https://www.tutorialspoint.com/generate-pseudo-random-numbers-in-python
         random.seed(seed)
 
