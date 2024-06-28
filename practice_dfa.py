@@ -1,27 +1,31 @@
+############################################################################
+
+# Checks teacher and passed DFA for equivalency and prints the result
+def compare_dfas(teacher, dfa_to_compare):
+    counterexample = teacher.equivalent(dfa_to_compare)
+    if counterexample:
+        print("Counterexample: " + counterexample)
+    else:
+        print("DFAs are equivalent")
+
+############################################################################
+
 from teacher import Teacher
 import random
 
 # The teacher will use the provided alphabet
 alphabet = ['0','1']
 
-my_teacher = Teacher(alphabet, num_nodes = 5)
+my_teacher = Teacher(alphabet, num_nodes = 5, seed = 1821)
 
-'''print("Complete DFA:")
-for node in my_teacher.m:
-    print(node)'''
+my_dfa = [[1, 0, 0]]
 
 
-# print("01 is accepted: " + str(Teacher.member("01", my_teacher.m, alphabet)))
-# print("10 is accepted: " + str(Teacher.member("10", my_teacher.m, alphabet)))
+compare_dfas(my_teacher, my_dfa)
+print("-----")
 
-my_dfa = [1, 0, 0]
-
-counterexample_found = bool(my_teacher.equivalent(my_dfa))
-print("equivalent DFAs: " + str(not counterexample_found))
-
-my_teacher_2 = Teacher(alphabet, num_nodes = 4)
-counterexample_found_2 = bool(my_teacher_2.equivalent(my_dfa))
-print("equivalent DFAs (#2): " + str(not counterexample_found_2))
+my_teacher_2 = Teacher(alphabet, num_nodes = 4, seed = 1821)
+compare_dfas(my_teacher_2, my_dfa)
 
 
 

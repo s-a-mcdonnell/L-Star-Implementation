@@ -3,15 +3,14 @@ import random
 class Teacher:
 
     # Constructor
-    def __init__(self, alphabet, num_nodes = -1):
+    def __init__(self, alphabet, num_nodes = -1, seed = 1821):
         print("teacher created")
 
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
 
         # Using this guide to PRN generation in Python: https://www.tutorialspoint.com/generate-pseudo-random-numbers-in-python
-        # Arbitarily chosen seed for the PRNG
-        random.seed(1821)
+        random.seed(seed)
 
         # Determine the number of states in the DFA (between 1 and 100, inclusive)
         # NOTE: The upper limit here is arbitrarily chosen
@@ -64,12 +63,12 @@ class Teacher:
 
         # Generate an arbitrarily large number of strings
         strings = []
-        for i in range(10):
+        for i in range(100):
             strings.append(self.generate_string())
 
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
         for s in strings:
-            if not self.__member(s) == Teacher.member(s, m_hat, self.alphabet):
+            if self.__member(s) != Teacher.member(s, m_hat, self.alphabet):
                 return s
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
@@ -79,6 +78,7 @@ class Teacher:
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
     @staticmethod
     def member(s, dfa: list[list[int]], alpha):
+        print("membership query called")
 
         input = []
 
@@ -99,11 +99,11 @@ class Teacher:
     
     # Non-static version of membership query
     def __member(self, s):
+        print("private membership query called")
         return Teacher.member(s, self.m, self.alphabet)
 
 
     def generate_string(self):
-        print("generate_string called")
 
         strg = ""
             
@@ -112,5 +112,4 @@ class Teacher:
         for i in range(0, random.randint(0, 10)):
             strg += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
         
-        print("string generated: " + strg)
         return strg
