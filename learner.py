@@ -103,7 +103,6 @@ class Learner:
             else:
                 assert gamma == str(gamma)
 
-                self.access_string_reference.update({gamma: len(self.access_string_reference)})
                 self.update_tree(gamma)
                 # call update_tree
         print("End L-Star algorithm")
@@ -131,6 +130,10 @@ class Learner:
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
         gamma_j_minus_1 : str = gamma[0 : j]
+
+        # Update dictionary with access string
+        assert(gamma_j_minus_1 != "")
+        self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})
 
         # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
@@ -202,6 +205,7 @@ class Learner:
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
+                print("dictionary: " + str(self.access_string_reference))
                 to_become[self.access_string_reference[key]][self.alphabet.index(b) + 1] = to_direct
 
         # Ensure that all -1s have been overwritten
@@ -220,6 +224,8 @@ class Learner:
         # set current node to root of T
         current = self.t.root
 
+        loops_to_find_leaf = 0
+
         # Loop as long as current has a left child (that is, as long as current is not a leaf)
         while (current.left_child):
                         
@@ -233,10 +239,14 @@ class Learner:
             # else (if rejected), current node is left child of current node
             else:
                 current = current.left_child
+            
+            loops_to_find_leaf += 1
                     
         # NOTE: We have reached this point because current does not have a left child.
         # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
         assert not current.right_child
+
+        print("loops to find leaf: " + str(loops_to_find_leaf))
 
         # Check that access string is properly stored
         if not (current.value in self.access_string_reference.keys()):
