@@ -23,7 +23,7 @@ class Learner:
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
-        t = Tree(Node(""))
+        t = Tree(Node("", None))
         # lambda is not a variable name in Python due to it being used for function stuff so I'm going to call it 
 
         # create M_hat with just one state in T
@@ -94,6 +94,7 @@ class Learner:
     # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
+        print("Update tree called")
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
             # Get the first i characters of gamma
@@ -143,10 +144,13 @@ class Learner:
         assert node_to_edit.parent
         node_to_edit.value = new_d
 
+        print("update tree done.")
+
 
     # input: T is our classification tree
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
+        print("construct hypothesis called")
         to_become = [[-1]*(len(self.alphabet)+1)]
 
         # for each access string (leaf) of T, create a state in M_hat
@@ -168,10 +172,12 @@ class Learner:
                 to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
 
         self.m_hat = to_become
+        print("m_hat updated by construct hypothesis")
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
     def sift_return_node(self, s):
+        print("sift called on string " + s)
         
         # set current node to root of T
         current = self.t.root
@@ -195,12 +201,14 @@ class Learner:
         assert not current.right_child
 
         # Return the access string at the leaf found
+        print("ending sift. returning access string.")
         return current
 
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
     def sift(self, s):
+        print("returning NODE from sift")
         return self.sift_return_node(s).value
 
 
