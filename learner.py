@@ -5,7 +5,8 @@ from teacher import Teacher
 
 class Learner:
 
-    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs 
+    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs
+    # TODO: NOTHING IS TESTED except for init :)
 
     def __init__(self, alphabet = ['0','1']):
 
@@ -129,6 +130,7 @@ class Learner:
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
                 to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
+
         self.m_hat = to_become
 
 
