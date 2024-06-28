@@ -29,7 +29,9 @@ class Learner:
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
         self.m_hat = [[-1]*(len(self.alphabet)+1)]
 
-        # TODO: implement dictionary of access string corresponding to indices in the m_hat matrix for easy switch between
+        # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
+        self.access_string_reference = {}
+        self.access_string_reference.update({"": 0})
 
         # append the first state
         # check whether empty string is accepted or rejected
@@ -59,9 +61,11 @@ class Learner:
                 # counterexample is rejected
                 t.root.right_child = Node("", t.root)
                 t.root.left_child = Node(gamma, t.root)
+            self.access_string_reference.update({gamma: 1})
         print("Initialization done")
         t.print_tree()
         print("tree printed")
+        print(self.access_string_reference)
 
 
     def lstar_algorithm(self):
