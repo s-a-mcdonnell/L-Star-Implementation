@@ -8,6 +8,13 @@ class Learner:
     # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs
     # TODO: NOTHING IS TESTED except for init :)
 
+    # Updates the access string reference dictionary with the given values
+    # Isolated to its own method for debugging purposes (prevent clobbering)
+    def update_dictionary(self, key : str, index : int):
+        print("adding key " + key + " to dictionary")
+        assert (not key in self.access_string_reference.keys()) 
+        self.access_string_reference.update({key : index})
+
     def __init__(self, alphabet = ['0','1']):
 
         test_tree = Tree(Node("root", None))
@@ -35,7 +42,8 @@ class Learner:
         # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
         # add to the dictionary when updating the tree, not when reconstructing m_hat, because we need dict to construct m_hat
         self.access_string_reference = {}
-        self.access_string_reference.update({"": 0})
+        self.update_dictionary("", 0)
+        # self.access_string_reference.update({"": 0})
 
         # append the first state
         # check whether empty string is accepted or rejected
@@ -69,7 +77,8 @@ class Learner:
                 self.t.root.left_child = Node(gamma, self.t.root)
             
             # Add counterexample to the dictionary
-            self.access_string_reference.update({gamma: 1})
+            self.update_dictionary(gamma, 1)
+            # self.access_string_reference.update({gamma: 1})
 
         # Confirm that all -1s have been overwritten
         for row in self.m_hat:
@@ -137,7 +146,6 @@ class Learner:
                 break
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
-
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
         gamma_j_minus_1 = gamma[0 : j]
@@ -148,7 +156,8 @@ class Learner:
         print("a is accepted? " + str(self.my_teacher.member("a")))
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
-        self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})
+        self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
+        '''self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})''' 
         print("j is " + str(j))
         print("gamma[j - 1] is " + str(gamma_j_minus_1))
 
