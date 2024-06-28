@@ -68,7 +68,7 @@ class Teacher:
 
         for i in range(1000000):
             s = self.generate_string()
-            if self.member(s) != Teacher.member(s, m_hat, self.alphabet):
+            if self.member(s) != self.member(s, m_hat, self.alphabet):
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
@@ -76,9 +76,14 @@ class Teacher:
 
     # membership query
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
-    @staticmethod
-    def member(s, dfa: list[list[int]], alpha):
+    def member(self, s, dfa: list[list[int]] = None, alpha = None):
         # print("membership query called")
+
+        if not dfa:
+            dfa = self.m
+        
+        if not alpha:
+            alpha = self.alphabet
 
         input = []
 
@@ -96,12 +101,6 @@ class Teacher:
         
         # Return the int boolean indicating if the final state is an accept or reject state
         return bool(dfa[next_node_index][0])
-    
-    # Non-static version of membership query
-    def member(self, s):
-        print("NON-STATIC membership query called")
-        return Teacher.member(s, self.m, self.alphabet)
-
 
     def generate_string(self):
 
