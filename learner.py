@@ -5,12 +5,12 @@ from teacher import Teacher
 
 class Learner:
 
-    def __init__(self):
+    def __init__(self, alphabet = ['0','1']):
 
         self.solved = False
         # intialize alphabet and teacher
         # Note that the alphabet must contains characters (one-character strings), not ints
-        self.alphabet = ['0','1']
+        self.alphabet = alphabet
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)

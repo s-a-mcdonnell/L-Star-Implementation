@@ -14,15 +14,33 @@ from teacher import Teacher
 import random
 
 # The teacher will use the provided alphabet
-alphabet = ['0','1']
+alphabet = ['a', 'b', 'c']
 
 my_teacher = Teacher(alphabet, num_nodes = 5, seed = 1821)
 
-my_dfa = [[1, 0, 0]]
+# My DFA always accepts
+my_dfa = []
+my_dfa.append([])
+my_dfa[0].append(1)
+for character in alphabet:
+    my_dfa[0].append(0)
 
+'''compare_dfas(my_teacher, my_dfa)
 
-compare_dfas(my_teacher, my_dfa)
 print("-----")
+
+# My other DFA always rejects'''
+
+my_dfa_2 = []
+my_dfa_2.append([])
+my_dfa_2[0].append(0)
+for character in alphabet:
+    my_dfa_2[0].append(0)
+
+compare_dfas(my_teacher, my_dfa_2)
+
+print("-----")
+
 
 my_teacher_2 = Teacher(alphabet, num_nodes = 4, seed = 1821)
 compare_dfas(my_teacher_2, my_dfa)
