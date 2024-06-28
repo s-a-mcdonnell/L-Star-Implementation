@@ -123,7 +123,7 @@ class Learner:
             # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
             '''if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
                 break'''
-            if access_string != Teacher.final_state(strng, self.m_hat, self.alphabet):
+            if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
                 break
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
