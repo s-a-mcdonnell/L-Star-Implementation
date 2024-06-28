@@ -133,7 +133,7 @@ class Learner:
 
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
-        gamma_j_minus_1 : str = gamma[0 : j]
+        gamma_j_minus_1 = gamma[0 : j]
 
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
@@ -146,7 +146,7 @@ class Learner:
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
-        new_d : str = gamma[j] + node_to_edit.parent.value
+        new_d = gamma[j] + node_to_edit.parent.value
         print("New distinguishing string is " + str(new_d))
     
         # Create child leaves for node_to_edit, making it an internal node
