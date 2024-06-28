@@ -73,25 +73,22 @@ class Teacher:
 
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
         for s in strings:
-            if not self.member(s) == self.member(s, m_hat):
+            if not self.__member(s) == Teacher.member(s, m_hat, self.alphabet):
                 return s
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
         return False
 
     # membership query
-    # takes a string s and returns an int boolean (0 or 1) indicating whether s is accepted or rejected by the given DFA
-    def member(self, s, dfa = None):
-
-        # Default DFA is m
-        if not dfa:
-            dfa = self.m
+    # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
+    @staticmethod
+    def member(s, dfa, alpha):
 
         input = []
 
         # Convert passed string into an array of ints, where each int is the index in the alphabet array corresponding to that character
         for char in s:
-            input.append(self.alphabet.index(char))
+            input.append(alpha.index(char))
         
         # Enter the DFA (M) at node 0
         node_index = 0
@@ -101,4 +98,9 @@ class Teacher:
             node_index = dfa[node_index][char_index + 1]
         
         # Return the int boolean indicating if the final state is an accept or reject state
-        return dfa[node_index][0]
+        return bool(dfa[node_index][0])
+    
+    # Non-static version of membership query
+    def __member(self, s):
+        return Teacher.member(s, self.m, self.alphabet)
+

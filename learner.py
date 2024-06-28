@@ -7,7 +7,8 @@ class Learner:
 
     def __init__(self):
         # intialize alphabet and teacher
-        self.alphabet = [0,1]
+        # Note that the alphabet must contains characters (one-character strings), not ints
+        self.alphabet = ['0','1']
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
