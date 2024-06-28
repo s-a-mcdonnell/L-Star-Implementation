@@ -98,8 +98,8 @@ class Teacher:
         return bool(dfa[next_node_index][0])
     
     # Non-static version of membership query
-    def __member(self, s):
-        print("private membership query called")
+    def member(self, s):
+        print("NON-STATIC membership query called")
         return Teacher.member(s, self.m, self.alphabet)
 
 
