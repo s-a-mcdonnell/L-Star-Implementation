@@ -80,17 +80,9 @@ class Teacher:
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
         return False
-
-    # membership query
-    # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
-    def member(self, s, dfa: list[list[int]] = None, alpha = None):
-        # print("membership query called")
-
-        if not dfa:
-            dfa = self.m
-        
-        if not alpha:
-            alpha = self.alphabet
+    
+    @staticmethod
+    def final_state(s, dfa: list[list[int]], alpha):
 
         input = []
 
@@ -106,8 +98,23 @@ class Teacher:
             current_state : list[int] = dfa[next_state_index]
             next_state_index = current_state[char_index + 1]
         
+        # Return final state
+        return dfa[next_state_index]
+        
+
+    # membership query
+    # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
+    def member(self, s, dfa: list[list[int]] = None, alpha = None):
+        # print("membership query called")
+
+        if not dfa:
+            dfa = self.m
+        
+        if not alpha:
+            alpha = self.alphabet
+
         # Return the int boolean indicating if the final state is an accept or reject state
-        return bool(dfa[next_state_index][0])
+        return bool(Teacher.final_state(s, dfa, alpha)[0])
 
     def generate_string(self):
 
