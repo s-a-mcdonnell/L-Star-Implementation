@@ -9,6 +9,12 @@ def compare_dfas(teacher, dfa_to_compare):
         print("DFAs are equivalent")
 
 ############################################################################
+# Checks and prints membership info for the passed string
+def check_membership(s):
+    print("Is " + (str(s) if str(s) else "the empty string") + " a member? " + str(my_learner.my_teacher.member(str(s))))
+
+############################################################################
+
 
 from learner import Learner
 from learner import Node
@@ -62,5 +68,17 @@ hypothesis = my_learner.construct_hypothesis()
 
 print(hypothesis)
 
-print("Is 11111001 a member? " + str(my_learner.my_teacher.member("11111001")))
+
+check_membership("")
+check_membership(0)
+check_membership(1)
+check_membership(11111001)
+check_membership(111110010)
+check_membership(111110011)
+
+
+
+'''print("Is the empty string a member? " + str(my_learner.my_teacher.member("")))
+print("Is 1 a member? " + str(my_learner.my_teacher.member("1")))
+print("Is 11111001 a member? " + str(my_learner.my_teacher.member("11111001")))'''
 
