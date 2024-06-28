@@ -23,7 +23,7 @@ class Learner:
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
-        t = Tree(Node("", None))
+        self.t = Tree(Node("", None))
         # lambda is not a variable name in Python due to it being used for function stuff so I'm going to call it 
 
         # create M_hat with just one state in T
@@ -58,12 +58,12 @@ class Learner:
         else:
             print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
-                t.root.right_child = Node(gamma, t.root)
-                t.root.left_child = Node("", t.root)
+                self.t.root.right_child = Node(gamma, self.t.root)
+                self.t.root.left_child = Node("", self.t.root)
             else:
                 # counterexample is rejected
-                t.root.right_child = Node("", t.root)
-                t.root.left_child = Node(gamma, t.root)
+                self.t.root.right_child = Node("", self.t.root)
+                self.t.root.left_child = Node(gamma, self.t.root)
             self.access_string_reference.update({gamma: 1})
         print("Initialization done")
         # t.print_tree()
@@ -76,7 +76,7 @@ class Learner:
 
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
-            self.m_hat = self.construct_hypothesis(self.t)
+            self.m_hat = self.construct_hypothesis()
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
             if not gamma:
@@ -171,8 +171,8 @@ class Learner:
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
                 to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
 
-        self.m_hat = to_become
         print("m_hat updated by construct hypothesis")
+        return to_become
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
