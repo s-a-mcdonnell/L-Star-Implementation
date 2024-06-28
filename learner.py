@@ -57,6 +57,8 @@ class Learner:
             self.solved = True
         # put counterexample gamma into our tree T
         else:
+            assert gamma == str(gamma)
+
             print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
                 self.t.root.right_child = Node(gamma, self.t.root)
@@ -65,6 +67,8 @@ class Learner:
                 # counterexample is rejected
                 self.t.root.right_child = Node("", self.t.root)
                 self.t.root.left_child = Node(gamma, self.t.root)
+            
+            # Add counterexample to the dictionary
             self.access_string_reference.update({gamma: 1})
 
         # Confirm that all -1s have been overwritten
@@ -97,6 +101,8 @@ class Learner:
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
             else:
+                assert gamma == str(gamma)
+
                 self.access_string_reference.update({gamma: len(self.access_string_reference)})
                 self.update_tree(gamma)
                 # call update_tree
@@ -124,7 +130,7 @@ class Learner:
 
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
-        gamma_j_minus_1 = gamma[0 : j]
+        gamma_j_minus_1 : str = gamma[0 : j]
 
         # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
@@ -132,7 +138,7 @@ class Learner:
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
-        new_d = gamma[j] + node_to_edit.parent.value
+        new_d : str = gamma[j] + node_to_edit.parent.value
     
         # Create child leaves for node_to_edit, making it an internal node
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
@@ -168,7 +174,7 @@ class Learner:
         to_become = []
 
         # for each access string (leaf) of T, create a state in M_hat
-        for key in self.access_string_reference:
+        for key in self.access_string_reference.keys():
             to_append = []
             
             # Save a boolean indicating if the given key corresponds to an accept or reject state
@@ -253,7 +259,7 @@ class Learner:
 
 class Node:
 
-    def __init__(self, value, parent):
+    def __init__(self, value : str, parent):
         self.value = value
 
         self.parent = parent
