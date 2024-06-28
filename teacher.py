@@ -68,7 +68,7 @@ class Teacher:
 
         for i in range(1000000):
             s = self.generate_string()
-            if self.__member(s) != Teacher.member(s, m_hat, self.alphabet):
+            if self.member(s) != Teacher.member(s, m_hat, self.alphabet):
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
@@ -98,8 +98,8 @@ class Teacher:
         return bool(dfa[next_node_index][0])
     
     # Non-static version of membership query
-    def __member(self, s):
-        # print("private membership query called")
+    def member(self, s):
+        print("NON-STATIC membership query called")
         return Teacher.member(s, self.m, self.alphabet)
 
 

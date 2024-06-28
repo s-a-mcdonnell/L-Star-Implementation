@@ -6,40 +6,66 @@ from teacher import Teacher
 class Learner:
 
     def __init__(self, alphabet = ['0','1']):
+
+        self.solved = False
         # intialize alphabet and teacher
         # Note that the alphabet must contains characters (one-character strings), not ints
         self.alphabet = alphabet
         self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
+        t = Tree("")
+        # lambda is not a variable name in Python due to it being used for function stuff so I'm going to call it 
 
         # create M_hat with just one state in T
         # The DFA (M) is a matrix in which the rows are the nodes
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
-        self.m = [[-1]*(len(self.alphabet)+1)]
+        self.m_hat = [[-1]*(len(self.alphabet)+1)]
+
+        # append the first state
+        # check whether empty string is accepted or rejected
+        to_append = []
+        if self.my_teacher.member(""):
+            # empty string accepted
+            to_append.append(1)
+        else:
+            to_append.append(0)
+        for i in range(len(self.alphabet)):
+            to_append.append(0)
+        self.m_hat.append(to_append)
     
         # equivalence query on initial M_hat
+        gamma = self.my_teacher.equivalent(self.m_hat)
+        if not gamma:
+            print("We are done. DFA is the trivial DFA.")
+            self.solved = True
         # put counterexample gamma into our tree T
-
-        pass
+        else:
+            print("Counterexample found, adding to tree.")
+            if self.my_teacher.member(gamma):
+                t.root.rightChild = Node(gamma)
+                t.root.leftChild = Node("")
+            else:
+                # counterexample is rejected
+                t.root.rightChild = Node("")
+                t.root.leftChild = Node(gamma)
 
 
     def lstar_algorithm(self):
         print("running l-star")
 
-        unsolved = True
-        # while loop (while unsolved):
+        while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
             # equivalence query => does our current M_hat equal the real M from teacher?
             # if yes we are done
             # if no, update T by determining the new access string and distinguishing string (shift down)
                 # call update_tree
                 # series of membership queries on prefix of counterexample gamma
-        pass
+            pass
 
 
-    # input: gamma, a counterexample generated from an equivalence query, and our tree T
+    # input: gamma (a counterexample generated from an equivalence query) and our tree T
     # output: an updated tree T
     def update_tree(self, gamma, t):
         # for each prefix set of characters of gamma
@@ -95,4 +121,6 @@ class Tree:
 
     def __init__(self, root: Node):
         self.root = root
+
+    # other methods go here ie sorting stuff
         
