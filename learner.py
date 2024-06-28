@@ -7,10 +7,10 @@ class Learner:
 
     def __init__(self, alphabet = ['0','1']):
 
-        print = Tree(Node("root"))
-        print.root.left_child = Node("left child", print.root)
-        print.root.right_child = Node("right child", print.root)
-        print.print()
+        test_tree = Tree(Node("root"))
+        test_tree.root.left_child = Node("left child", test_tree.root)
+        test_tree.root.right_child = Node("right child", test_tree.root)
+        test_tree.print_tree()
 
 
         self.solved = False
@@ -29,6 +29,8 @@ class Learner:
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
         self.m_hat = [[-1]*(len(self.alphabet)+1)]
 
+        # TODO: implement dictionary of access string corresponding to indices in the m_hat matrix for easy switch between
+
         # append the first state
         # check whether empty string is accepted or rejected
         to_append = []
@@ -43,6 +45,7 @@ class Learner:
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
+        print("counterexample: " + gamma)
         if not gamma:
             print("We are done. DFA is the trivial DFA.")
             self.solved = True
@@ -50,14 +53,15 @@ class Learner:
         else:
             print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
-                t.root.rightChild = Node(gamma, t.root)
-                t.root.leftChild = Node("")
+                t.root.right_child = Node(gamma, t.root)
+                t.root.left_child = Node("", t.root)
             else:
                 # counterexample is rejected
-                t.root.rightChild = Node("")
-                t.root.leftChild = Node(gamma, t.root)
+                t.root.right_child = Node("", t.root)
+                t.root.left_child = Node(gamma, t.root)
         print("Initialization done")
-        t.print()
+        t.print_tree()
+        print("tree printed")
 
 
     def lstar_algorithm(self):
@@ -131,7 +135,7 @@ class Tree:
         self.root = root
 
     # other methods go here ie sorting stuff
-    def print(self):
+    def print_tree(self):
         stack = []
         stack.append(self.root)
         while stack:
@@ -145,4 +149,7 @@ class Tree:
             while n.parent is not None:
                 print("\t", end="")
                 n = n.parent
-            print(to_print.value)
+            if(to_print.value == ""):
+                print("empty")
+            else:
+                print(to_print.value)
