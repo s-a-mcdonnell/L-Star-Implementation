@@ -95,7 +95,6 @@ class Learner:
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (shift down)
             else:
-                # TODO: Add gamma to the dictionary
                 self.update_tree(gamma)
                 # call update_tree
         print("End L-Star algorithm")
