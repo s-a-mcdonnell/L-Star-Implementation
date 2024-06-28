@@ -3,7 +3,7 @@ import random
 class Teacher:
 
     # Constructor
-    def __init__(self, alphabet):
+    def __init__(self, alphabet, num_nodes = -1):
         print("teacher created")
 
         # The teacher will use the provided alphabet
@@ -15,7 +15,8 @@ class Teacher:
 
         # Determine the number of states in the DFA (between 1 and 100, inclusive)
         # NOTE: The upper limit here is arbitrarily chosen
-        num_nodes = random.randint(1, 100)
+        if num_nodes == -1:
+            num_nodes = random.randint(1, 100)
 
         # The DFA (M) is a matrix in which the rows are the nodes
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
