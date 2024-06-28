@@ -1,6 +1,6 @@
 from learner import Learner
 
-alphabet = ['0', '1']
+alphabet = ['a', 'b']
 
 # Create learner
 my_learner = Learner(alphabet)
