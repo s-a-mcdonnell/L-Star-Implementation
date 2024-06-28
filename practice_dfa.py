@@ -44,11 +44,15 @@ alphabet = ['0', '1']
 
 my_learner = Learner(alphabet)
 
-my_learner.t.root = Node("", None)
+# my_learner.t.root = Node("", None)
 
-my_learner.t.root.left_child = Node("left", my_learner.t.root)
+# my_learner.t.root.left_child = Node("left", my_learner.t.root)
 
-my_learner.t.root.right_child = Node("right", my_learner.t.root)
+# my_learner.t.root.right_child = Node("right", my_learner.t.root)
+
+print("left child exists: " + str(bool(my_learner.t.root.left_child)))
+
+print("right child exists: " + str(bool(my_learner.t.root.right_child)))
 
 my_learner.t.print_tree()
 

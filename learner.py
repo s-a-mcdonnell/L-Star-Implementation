@@ -121,7 +121,7 @@ class Learner:
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
         new_d = gamma[j] + node_to_edit.parent.value
     
-        # Children child leaves for node_to_edit, making it an internal node
+        # Create child leaves for node_to_edit, making it an internal node
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
         node_to_edit.left_child = Node(None, node_to_edit)
         node_to_edit.right_child = Node(None, node_to_edit)
