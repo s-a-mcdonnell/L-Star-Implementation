@@ -14,7 +14,8 @@ from teacher import Teacher
 import random
 
 # The teacher will use the provided alphabet
-alphabet = ['a', 'b', 'c']
+# NOTE: The alphabet can only contain single-character characters
+alphabet = ['a', 'b', 'c', '1', '2', '3']
 
 my_teacher = Teacher(alphabet, num_nodes = 5, seed = 1821)
 
