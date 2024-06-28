@@ -10,7 +10,7 @@ class Learner:
 
     def __init__(self, alphabet = ['0','1']):
 
-        test_tree = Tree(Node("root"))
+        test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
         test_tree.root.right_child = Node("right child", test_tree.root)
         test_tree.print_tree()
@@ -206,7 +206,7 @@ class Learner:
 
 class Node:
 
-    def __init__(self, value, parent = None):
+    def __init__(self, value, parent):
         self.value = value
 
         self.parent = parent
