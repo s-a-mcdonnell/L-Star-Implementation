@@ -107,7 +107,6 @@ class Learner:
                 # call update_tree
         print("End L-Star algorithm")
 
-
     # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
     # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
@@ -122,7 +121,9 @@ class Learner:
 
             # check if the returned access string accepts or rejects in M and M_hat
             # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
-            if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
+            '''if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
+                break'''
+            if access_string != Teacher.final_state(strng, self.m_hat, self.alphabet):
                 break
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
@@ -131,6 +132,10 @@ class Learner:
         j = i
         gamma_j_minus_1 = gamma[0 : j]
 
+        print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
+        print("current tree:")
+        self.t.print_tree()
+        print("a is accepted? " + str(self.my_teacher.member("a")))
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
         self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})
