@@ -30,7 +30,6 @@ class Learner:
         # The DFA (M) is a matrix in which the rows are the nodes
         # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
         # The remaining entries in each row are the numbers of the nodes which the corresponding alphabet value at that index points to
-        # TODO: Replace with = [[]] ?
         self.m_hat = []
 
         # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
@@ -162,26 +161,43 @@ class Learner:
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
         print("construct hypothesis called")
-        # TODO: Replace with = [[]] ?
         to_become = []
 
         # for each access string (leaf) of T, create a state in M_hat
         for key in self.access_string_reference:
             to_append = []
-            for i in range(len(self.alphabet) + 1):
+            
+            # Save a boolean indicating if the given key corresponds to an accept or reject state
+            if self.my_teacher.member(key):
+                to_append.append(1)
+            else:
                 to_append.append(0)
-            to_become.append(to_append)
 
-        # start state of M_hat is gamma, the empty string
-        # for each state in M_hat and each symbol b in the language, compute the b-transition out of s:
-        for key in self.access_string_reference:
+            # Create space for the arrows
+            for i in range(len(self.alphabet)):
+                to_append.append(-1)
+            
+            to_become.append(to_append)
+        
+        print("M_hat mid-construction: " + str(to_become))
+
+        print("access_string_reference.keys(): " + str(self.access_string_reference.keys()))
+
+        # start state of M_hat is lambda, the empty string
+        # for each state in M_hat and each symbol b in the language, compute the b-transition out of the access string s:
+        for key in self.access_string_reference.keys():
             # for each symbol b in the language, sift
             for b in self.alphabet:
                 resulting_state = self.sift(key + b)
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
-                to_become[self.access_string_reference[key]][self.alphabet.index(b)] = to_direct
+                to_become[self.access_string_reference[key]][self.alphabet.index(b) + 1] = to_direct
+
+        # Ensure that all -1s have been overwritten
+        for row in to_become:
+            for entry in row:
+                entry >= 0
 
         print("m_hat updated by construct hypothesis")
         return to_become
