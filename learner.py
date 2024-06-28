@@ -123,10 +123,12 @@ class Learner:
             # sift gamma[i] in T
             access_string = self.sift(strng)
 
-            # check if the returned access string accepts or rejects in M and M_hat
+            '''# check if the returned access string accepts or rejects in M and M_hat
             # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
-            '''if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
+            if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
                 break'''
+            
+            # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
                 break
 
