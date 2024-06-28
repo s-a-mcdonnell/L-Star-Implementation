@@ -18,11 +18,21 @@ alphabet = ['0','1']
 
 my_teacher = Teacher(alphabet, num_nodes = 5, seed = 1821)
 
+# My DFA always accepts
 my_dfa = [[1, 0, 0]]
 
-
 compare_dfas(my_teacher, my_dfa)
+
 print("-----")
+
+# My other DFA always rejects
+
+my_dfa_2 = [[0,0,0]]
+
+compare_dfas(my_teacher, my_dfa_2)
+
+print("-----")
+
 
 my_teacher_2 = Teacher(alphabet, num_nodes = 4, seed = 1821)
 compare_dfas(my_teacher_2, my_dfa)

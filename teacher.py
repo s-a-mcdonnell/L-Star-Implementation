@@ -14,6 +14,7 @@ class Teacher:
 
         # Determine the number of states in the DFA (between 1 and 100, inclusive)
         # NOTE: The upper limit here is arbitrarily chosen
+        # NOTE: Not all of these will be accessible, depending on how the arrows point
         if num_nodes == -1:
             num_nodes = random.randint(1, 100)
 
@@ -28,11 +29,7 @@ class Teacher:
             self.m.append(new_node)
             for j in range(len(alphabet) + 1):
                 self.m[i].append(-1)
-        
-        # print("num_nodes = " + str(num_nodes))
-        # print("alphabet size = " + str(len(alphabet)))
-        # print("M has " + str(len(self.m)) + " rows and " + str(len(self.m[0])) + " columns")
-        
+
         arrows_created = 0
         accept_states = 0
         reject_states = 0
@@ -50,26 +47,25 @@ class Teacher:
                 arrow = random.randint(0, num_nodes - 1)
                 node[i] = arrow
                 arrows_created += 1
+        
+        # Print DFA
+        for row in self.m:
+            print(row)
 
-        # print("arrows created: " + str(arrows_created))
-        # print("accept states created: " + str(accept_states))
-        # print("reject states created: " + str(reject_states))
 
     # equivalency query
     # takes the DFA hypothesis m_hat
     # returns either a counterexample or False (indicating that the DFAs match)
     def equivalent(self, m_hat):
-        print("equivalency query called")
+        # print("equivalency query called")
 
-        # Generate an arbitrarily large number of strings
-        strings = []
-        for i in range(100):
-            strings.append(self.generate_string())
-
+        # Generate and test an arbitrarily large number of strings
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
-        for s in strings:
+
+        for i in range(1000000):
+            s = self.generate_string()
             if self.__member(s) != Teacher.member(s, m_hat, self.alphabet):
-                return s
+                return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
         return False
@@ -78,7 +74,7 @@ class Teacher:
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
     @staticmethod
     def member(s, dfa: list[list[int]], alpha):
-        print("membership query called")
+        # print("membership query called")
 
         input = []
 
@@ -99,7 +95,7 @@ class Teacher:
     
     # Non-static version of membership query
     def __member(self, s):
-        print("private membership query called")
+        # print("private membership query called")
         return Teacher.member(s, self.m, self.alphabet)
 
 
