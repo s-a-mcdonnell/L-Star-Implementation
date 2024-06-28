@@ -47,7 +47,8 @@ class Learner:
             to_append.append(0)
         for i in range(len(self.alphabet)):
             to_append.append(0)
-        self.m_hat.append(to_append)
+        
+        self.m_hat[0] = to_append
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
@@ -70,6 +71,8 @@ class Learner:
         for row in self.m_hat:
             for entry in row:
                 assert entry >= 0
+        
+        print("m_hat at end of initialization: " + str(self.m_hat))
 
 
         print("Initialization done")
