@@ -8,7 +8,7 @@ alphabet = ['0','1']
 # Arbitarily chosen seed for the PRNG
 random.seed(1820)
 
-num_nodes = 5
+num_nodes = 3
 
 # The DFA (M) is a matrix in which the rows are the nodes
 # The first entry in each row is a boolean in int form (0 or 1) indicating whether the node is an accept (1) or reject (0) state
