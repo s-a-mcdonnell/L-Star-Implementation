@@ -92,8 +92,10 @@ class Learner:
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
+            print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
+            print("Counterexample is ===> " + str(gamma))
             if not gamma:
                 # if yes we are done
                 print("DFA solved!")
