@@ -8,7 +8,22 @@ class Learner:
     # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs
     # TODO: NOTHING IS TESTED except for init :)
 
-    def __init__(self, alphabet = ['0','1']):
+    # Updates the access string reference dictionary with the given values
+    # Isolated to its own method for debugging purposes (prevent clobbering)
+    def update_dictionary(self, key : str, index : int):
+        print("adding key " + key + " to dictionary")
+        # assert (not key in self.access_string_reference.keys()) 
+
+        # Print debugging information if trying to clobber a pre-existing key:
+        if key in self.access_string_reference.keys():
+            print("trying to clobber key " + key)
+            self.sift(key)
+            #exit(1)
+            assert not key in self.access_string_reference.keys()
+
+        self.access_string_reference.update({key : index})
+
+    def __init__(self, alphabet = ['0','1'], premade_dfa = None):
 
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
@@ -20,7 +35,12 @@ class Learner:
         # intialize alphabet and teacher
         # Note that the alphabet must contains characters (one-character strings), not ints
         self.alphabet = alphabet
-        self.my_teacher = Teacher(self.alphabet)
+        
+        # If a premade DFA was provided (for testing), use it
+        if premade_dfa:
+            self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
+        else:
+            self.my_teacher = Teacher(self.alphabet)
 
         # initialize T with just the empty string (lambda)
         self.t = Tree(Node("", None))
@@ -35,7 +55,8 @@ class Learner:
         # dictionary for storing access strings as keys corresponding to their rows in the m_hat matrix
         # add to the dictionary when updating the tree, not when reconstructing m_hat, because we need dict to construct m_hat
         self.access_string_reference = {}
-        self.access_string_reference.update({"": 0})
+        self.update_dictionary("", 0)
+        # self.access_string_reference.update({"": 0})
 
         # append the first state
         # check whether empty string is accepted or rejected
@@ -69,7 +90,8 @@ class Learner:
                 self.t.root.left_child = Node(gamma, self.t.root)
             
             # Add counterexample to the dictionary
-            self.access_string_reference.update({gamma: 1})
+            self.update_dictionary(gamma, 1)
+            # self.access_string_reference.update({gamma: 1})
 
         # Confirm that all -1s have been overwritten
         for row in self.m_hat:
@@ -136,23 +158,28 @@ class Learner:
             
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
+                print("breaking loop")
                 break
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
-
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
         j = i
         gamma_j_minus_1 = gamma[0 : j]
 
-        print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
-        print("current tree:")
+        # print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
+        # print("current tree:")
         self.t.print_tree()
-        print("a is accepted? " + str(self.my_teacher.member("a")))
+        # print("a is accepted? " + str(self.my_teacher.member("a")))
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
-        self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})
         print("j is " + str(j))
+        print("gamma is " + gamma + ", " + ("accepted" if self.my_teacher.member(gamma) else "rejected") + " by M, " + ("accepted" if self.my_teacher.member(gamma, self.m_hat) else "rejected") + " by M_hat")
         print("gamma[j - 1] is " + str(gamma_j_minus_1))
+        print("strng is " + strng)
+        print("access string is " + access_string)
+        self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
+        '''self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})''' 
+        
 
         # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
@@ -254,8 +281,12 @@ class Learner:
             # d is distinguishing string at current node
             d = current.value
 
+            print("current.value: " + d)
+            print(s + " + " + d + " is " + ("accepted" if self.my_teacher.member(s+d) else "rejected") + " by M")
+
             # membership query on sd (concatenated) 
             # if membership query is accepted, current node is right child of current node
+            '''if self.my_teacher.member(str(s) + str(d)):'''
             if self.my_teacher.member(s + d):
                 current = current.right_child
             # else (if rejected), current node is left child of current node
@@ -271,10 +302,11 @@ class Learner:
         print("loops to find leaf: " + str(loops_to_find_leaf))
 
         # Check that access string is properly stored
-        if not (current.value in self.access_string_reference.keys()):
+        '''if not (current.value in self.access_string_reference.keys()):
             print("current value: " + current.value)
             print("dictionary: " + str(self.access_string_reference))
-            exit(1)
+            exit(1)'''
+        assert (current.value in self.access_string_reference.keys())
         
         # Return the access string at the leaf found
         print("ending sift. returning NODE " + str(self.access_string_reference[current.value]) + " with access string " + (current.value if current.value else "empty"))
