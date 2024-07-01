@@ -144,8 +144,11 @@ class Learner:
     def update_tree(self, gamma):
         print("Update tree called")
         print("Updating the tree with " + gamma)
+
+        j = 0
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
+            j = i
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
@@ -168,8 +171,10 @@ class Learner:
 
         # let j be the least i s.t. s[i] does not equal s_hat[i]
         # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
-        j = i
+        print("j = " + str(j))
+        print("gamma = " + gamma)
         gamma_j_minus_1 = gamma[0 : j]
+        print("gamma[j-1] = " + gamma_j_minus_1)
 
         # print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
         # print("current tree:")
