@@ -359,6 +359,6 @@ class Tree:
                 print("\t", end="")
                 n = n.parent
             if(to_print.value == ""):
-                print("empty")
+                print(("d: " if to_print.left_child else "s: ") + "empty")
             else:
-                print(to_print.value)
+                print(("d: " if to_print.left_child else "s: ") + to_print.value)
