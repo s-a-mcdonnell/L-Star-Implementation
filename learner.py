@@ -28,7 +28,7 @@ class Learner:
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
         test_tree.root.right_child = Node("right child", test_tree.root)
-        test_tree.print_tree()
+        #test_tree.print_tree()
 
 
         self.solved = False
@@ -100,7 +100,7 @@ class Learner:
         
         print("m_hat at end of initialization: " + str(self.m_hat))
 
-        self.t.print_tree()
+        #self.t.print_tree()
 
         print("Initialization done")
         # t.print_tree()
@@ -134,7 +134,7 @@ class Learner:
                 print("number of entries in dictionary: " + str(len(self.access_string_reference)))
                 print("number of rows in M_hat: " + str(len(self.m_hat)))
 
-                self.t.print_tree()
+                #self.t.print_tree()
             print("LOOP COMPLETE IN L STAR")
         print("End L-Star algorithm")
 
@@ -178,7 +178,7 @@ class Learner:
 
         # print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
         # print("current tree:")
-        self.t.print_tree()
+        #self.t.print_tree()
         # print("a is accepted? " + str(self.my_teacher.member("a")))
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
