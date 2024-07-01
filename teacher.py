@@ -85,6 +85,7 @@ class Teacher:
         for i in range(1000000):
             s = self.generate_string()
             if self.member(s) != self.member(s, m_hat, self.alphabet):
+                print("Counterexample found: " + s)
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
