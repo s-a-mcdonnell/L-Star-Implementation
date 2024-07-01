@@ -211,6 +211,9 @@ class Learner:
             node_to_edit.right_child.value =  node_to_edit.value
             node_to_edit.left_child.value = gamma_j_minus_1
         else:
+            assert self.my_teacher.member(gamma_j_minus_1 + new_d)
+            print("No assertion error")
+
             node_to_edit.right_child.value = gamma_j_minus_1
             node_to_edit.left_child.value =  node_to_edit.value
 
