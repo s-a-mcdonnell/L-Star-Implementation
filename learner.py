@@ -380,6 +380,8 @@ class Tree:
                 print("\t", end="")
                 n = n.parent
             
+            # Specify if the string is a distinguishing string or access string
+            # If the string is empty, print "empty." If it is NoneType, indicate lack of initialization. If it has a non-empty value, print it
             print(f"{"d" if to_print.left_child else "s"}: {("empty" if to_print.value == "" else to_print.value) if (to_print.value != None) else "not initialized"}")
             '''if(to_print.value == ""):
                 print(("d: " if to_print.left_child else "s: ") + "empty")
