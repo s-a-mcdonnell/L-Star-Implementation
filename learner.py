@@ -227,6 +227,7 @@ class Learner:
             node_to_edit.right_child.value = gamma_j_minus_1
             node_to_edit.left_child.value =  s_j_minus_1
         else:
+            print(f"Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
             exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
         # Set node_to_edit's value to be the new distinguishing string
