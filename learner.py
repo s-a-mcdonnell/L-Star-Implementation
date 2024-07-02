@@ -119,7 +119,6 @@ class Learner:
             print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
-            assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
 
             print("Counterexample is ===> " + str(gamma))
             if not gamma:
@@ -130,7 +129,9 @@ class Learner:
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (sift down)
             else:
-                assert gamma == str(gamma)
+                assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
+
+                assert type(gamma) is str
 
                 # call update_tree (includes updating dictionary)
                 self.update_tree(gamma)

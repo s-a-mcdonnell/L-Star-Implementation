@@ -91,12 +91,15 @@ class Teacher:
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
+        print("No counterexample found")
         return False
     
     @staticmethod
     def final_state(s : str, dfa: list[list[int]], alpha):
 
         input = []
+
+        assert (type(s) is str)
 
         # Convert passed string into an array of ints, where each int is the index in the alphabet array corresponding to that character
         for char in s:
@@ -116,7 +119,7 @@ class Teacher:
 
     # membership query
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
-    def member(self, s, dfa: list[list[int]] = None, alpha = None):
+    def member(self, s : str, dfa: list[list[int]] = None, alpha = None):
         # print("membership query called")
 
         if not dfa:
@@ -126,7 +129,8 @@ class Teacher:
             alpha = self.alphabet
 
         # Return the int boolean indicating if the final state is an accept or reject state
-        return bool(Teacher.final_state(s, dfa, alpha)[0])
+        final_state : list[int] = Teacher.final_state(s, dfa, alpha)
+        return bool(final_state[0])
 
     def generate_string(self):
 
