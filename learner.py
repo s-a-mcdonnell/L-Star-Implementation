@@ -73,6 +73,8 @@ class Learner:
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
+        assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
+
         if not gamma:
             print("We are done. DFA is the trivial DFA.")
             self.solved = True

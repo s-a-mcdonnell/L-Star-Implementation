@@ -85,6 +85,8 @@ class Teacher:
         for i in range(1000000):
             s = self.generate_string()
             if self.member(s) != self.member(s, m_hat, self.alphabet):
+                assert(type(self.member(s)) is bool)
+                assert(type(self.member(s, m_hat, self.alphabet)) is bool)
                 print("Counterexample found: " + s)
                 return s            
 
@@ -105,7 +107,7 @@ class Teacher:
 
         # Navigate through the DFA to the final state
         for char_index in input:
-            current_state : list[int] = dfa[next_state_index]
+            current_state = dfa[next_state_index]
             next_state_index = current_state[char_index + 1]
         
         # Return final state
