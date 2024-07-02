@@ -147,16 +147,27 @@ class Learner:
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
         print("Update tree called")
-        print("Updating the tree with " + gamma)
+        print(f"Updating the tree with {gamma}")
+
+        # Assert that gamma really is a counterexample
+        assert bool(self.my_teacher.member(gamma)) != bool(self.my_teacher.member(gamma, self.m_hat, self.alphabet))
+
 
         j = 0
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
             j = i
+
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            access_string = self.sift(strng)
+            access_string_shift = self.sift(strng)
+
+            # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
+            # TODO: This is a janky way to be using a dictionary. Is this the best-suited ADT for our purposes?
+            row_in_m_hat = self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet))
+            my_dict = self.access_string_reference
+            access_string_m_hat = list(my_dict.keys())[list(my_dict.values()).index(row_in_m_hat)]
 
             # check if the returned access string accepts or rejects in M and M_hat
             # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
@@ -165,11 +176,13 @@ class Learner:
                 break'''
             
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
-            if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
-                print("Access string: " + access_string)
-                print("Access string reference #: " + str(self.access_string_reference[access_string]))
-                print("Final state: " + str(Teacher.final_state(strng, self.m_hat, self.alphabet)))
-                print("M_hat index: " + str(self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet))))
+            #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
+            if access_string_shift != access_string_m_hat:
+                print(f"Access string from shifting: {access_string_shift}")
+                print(f"Access string row number #: {self.access_string_reference[access_string_shift]}")
+                print(f"Final state: {Teacher.final_state(strng, self.m_hat, self.alphabet)}")
+                print(f"M_hat row index: {row_in_m_hat}")
+                print(f"Assosciated access string: {access_string_m_hat}")
                 print("breaking loop")
                 break
 
@@ -214,7 +227,6 @@ class Learner:
         
         # xor operation (https://stackoverflow.com/questions/432842/how-do-you-get-the-logical-xor-of-two-variables-in-python)
         # TODO: Comment this assert statement back in
-        # assert bool(self.my_teacher.member(node_to_edit.value + new_d)) != bool(self.my_teacher.member(gamma_j_minus_1 + new_d))
         
         if self.my_teacher.member(node_to_edit.value + new_d):
             node_to_edit.right_child.value =  node_to_edit.value
