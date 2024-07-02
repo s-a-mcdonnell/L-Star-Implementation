@@ -117,7 +117,8 @@ class Learner:
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
-            print("m_hat updated " + str(self.m_hat))
+            print(f"m_hat updated {self.m_hat}")
+            # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
 
@@ -288,8 +289,7 @@ class Learner:
             for entry in row:
                 entry >= 0
         print("new m_hat:")
-        print(self.m_hat)
-        #print("m_hat updated by construct hypothesis")
+        print(to_become)
         return to_become
 
     # input: s is the string being sifted and T is our tree
