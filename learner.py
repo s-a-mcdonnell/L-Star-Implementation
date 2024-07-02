@@ -119,6 +119,8 @@ class Learner:
             print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
+            assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
+
             print("Counterexample is ===> " + str(gamma))
             if not gamma:
                 # if yes we are done
@@ -126,7 +128,7 @@ class Learner:
                 print("Learned DFA:")
                 print(self.m_hat)
                 self.solved = True
-            # if no, update T by determining the new access string and distinguishing string (shift down)
+            # if no, update T by determining the new access string and distinguishing string (sift down)
             else:
                 assert gamma == str(gamma)
 
@@ -217,12 +219,11 @@ class Learner:
         if self.my_teacher.member(node_to_edit.value + new_d):
             node_to_edit.right_child.value =  node_to_edit.value
             node_to_edit.left_child.value = gamma_j_minus_1
-        else:
-            assert self.my_teacher.member(gamma_j_minus_1 + new_d)
-            print("No assertion error")
-
+        elif self.my_teacher.member(gamma_j_minus_1 + new_d):
             node_to_edit.right_child.value = gamma_j_minus_1
             node_to_edit.left_child.value =  node_to_edit.value
+        else:
+            exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
         # Set node_to_edit's value to be the new distinguishing string
         assert node_to_edit.parent
