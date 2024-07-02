@@ -161,7 +161,7 @@ class Learner:
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            access_string_shift = self.sift(strng)
+            access_string_shift = self.sift(strng, breaker = True)
 
             # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
             # TODO: This is a janky way to be using a dictionary. Is this the best-suited ADT for our purposes?
@@ -178,43 +178,27 @@ class Learner:
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
             if access_string_shift != access_string_m_hat:
-                print(f"Access string from shifting: {access_string_shift}")
-                print(f"Access string row number #: {self.access_string_reference[access_string_shift]}")
-                print(f"Final state: {Teacher.final_state(strng, self.m_hat, self.alphabet)}")
-                print(f"M_hat row index: {row_in_m_hat}")
-                print(f"Assosciated access string: {access_string_m_hat}")
+                print(f"strng {strng}")
+                print(f"Access string from shifting: {access_string_shift if access_string_shift else "empty string"}")
+                print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
                 print("breaking loop")
                 break
 
-        # let j be the least i s.t. s[i] does not equal s_hat[i]
-        # TODO: Check that i can still be accessed after the for loop (I, Skyler, think it can bc Python is weird about scope)
-        # print("j = " + str(j))
-        # print("gamma = " + gamma)
+        # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
-        # print("gamma[j-1] = " + gamma_j_minus_1)
-
-        # print("for gamma " + (gamma if gamma else "empty string") + ", gamma[j-1] is " + (gamma_j_minus_1 if gamma_j_minus_1 else "empty"))
-        # print("current tree:")
-        #self.t.print_tree()
-        # print("a is accepted? " + str(self.my_teacher.member("a")))
+        print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
+    
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
-        # print("j is " + str(j))
-        # print("gamma is " + gamma + ", " + ("accepted" if self.my_teacher.member(gamma) else "rejected") + " by M, " + ("accepted" if self.my_teacher.member(gamma, self.m_hat) else "rejected") + " by M_hat")
-        # print("gamma[j - 1] is " + str(gamma_j_minus_1))
-        # print("strng is " + strng)
-        # print("access string is " + access_string)
         self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
-        '''self.access_string_reference.update({gamma_j_minus_1 : len(self.access_string_reference)})''' 
         
-
-        # TODO: Check that tree_node_accessed can still be accessed after the for loop is complete
+        # Get node in tree T to edit
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
+        s_j_minus_1 = node_to_edit.value
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
         new_d = gamma[j] + node_to_edit.parent.value
-        # print("New distinguishing string is " + str(new_d))
     
         # Create child leaves for node_to_edit, making it an internal node
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
@@ -223,17 +207,13 @@ class Learner:
     
         # Set values of node_to_edit's children
         # leaf nodes are the previous access string and the new access string gamma[j-1]
-        # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string
-        
-        # xor operation (https://stackoverflow.com/questions/432842/how-do-you-get-the-logical-xor-of-two-variables-in-python)
-        # TODO: Comment this assert statement back in
-        
-        if self.my_teacher.member(node_to_edit.value + new_d):
-            node_to_edit.right_child.value =  node_to_edit.value
+        # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string        
+        if self.my_teacher.member(s_j_minus_1 + new_d):
+            node_to_edit.right_child.value =  s_j_minus_1
             node_to_edit.left_child.value = gamma_j_minus_1
         elif self.my_teacher.member(gamma_j_minus_1 + new_d):
             node_to_edit.right_child.value = gamma_j_minus_1
-            node_to_edit.left_child.value =  node_to_edit.value
+            node_to_edit.left_child.value =  s_j_minus_1
         else:
             exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
@@ -295,13 +275,16 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
-    def sift_return_node(self, s):
-        #print("sift_return_node called on " + (s if s else "the empty string"))
+    def sift_return_node(self, s, breaker : bool = False):
+        print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
         current = self.t.root
 
         loops_to_find_leaf = 0
+
+        '''if breaker:
+            breakpoint()'''
 
         # Loop as long as current has a left child (that is, as long as current is not a leaf)
         while (current.left_child):
@@ -337,16 +320,16 @@ class Learner:
         assert (current.value in self.access_string_reference.keys())
         
         # Return the access string at the leaf found
-        #print("ending sift. returning NODE " + str(self.access_string_reference[current.value]) + " with access string " + (current.value if current.value else "empty"))
+        print(f"ending sift after {loops_to_find_leaf} loops. returning NODE {self.access_string_reference[current.value]} with access string {current.value if current.value else "empty"}")
         return current
 
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
-    def sift(self, s):
+    def sift(self, s, breaker : bool = False):
         #print("---")
         #print("sift called on " + (s if s else "the empty string"))
-        return self.sift_return_node(s).value
+        return self.sift_return_node(s, breaker).value
 
 
 class Node:
