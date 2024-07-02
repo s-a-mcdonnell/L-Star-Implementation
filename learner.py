@@ -204,12 +204,14 @@ class Learner:
         # TODO: Replacing old d with d from loop
         # new_d = gamma[j] + node_to_edit.parent.value
         new_d = gamma[j] + loop_d
-        self.t.print_tree()
         print(f"node to edit value: {node_to_edit.value}")
         print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
         print(f"new distinguishing string: {new_d}")
         print(f"s[j-1] = {s_j_minus_1}")
         print(f"gamma[j-1] = {gamma_j_minus_1}")
+
+        self.t.print_tree()
+
 
     
         # Create child leaves for node_to_edit, making it an internal node
@@ -377,7 +379,9 @@ class Tree:
             while n.parent is not None:
                 print("\t", end="")
                 n = n.parent
-            if(to_print.value == ""):
+            
+            print(f"{"d" if to_print.left_child else "s"}: {("empty" if to_print.value == "" else to_print.value) if (to_print.value != None) else "not initialized"}")
+            '''if(to_print.value == ""):
                 print(("d: " if to_print.left_child else "s: ") + "empty")
             else:
-                print(("d: " if to_print.left_child else "s: ") + to_print.value)
+                print(("d: " if to_print.left_child else "s: ") + to_print.value)'''
