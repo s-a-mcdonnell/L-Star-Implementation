@@ -211,6 +211,7 @@ class Learner:
         print(f"gamma[j-1] = {gamma_j_minus_1}")
 
         self.t.print_tree()
+        print(self.m_hat)
 
 
     
