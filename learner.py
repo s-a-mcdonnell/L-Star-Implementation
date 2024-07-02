@@ -23,7 +23,7 @@ class Learner:
 
         self.access_string_reference.update({key : index})
 
-    def __init__(self, alphabet = ['0','1'], num_states = -1, premade_dfa = None):
+    def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
@@ -40,7 +40,7 @@ class Learner:
         if premade_dfa:
             self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
         else:
-            self.my_teacher = Teacher(self.alphabet, num_states = num_states)
+            self.my_teacher = Teacher(self.alphabet, num_states = num_states, seed = seed)
 
         # initialize T with just the empty string (lambda)
         self.t = Tree(Node("", None))
@@ -128,6 +128,8 @@ class Learner:
                 print("DFA solved!")
                 print("Learned DFA:")
                 print(self.m_hat)
+                print("with tree:")
+                self.t.print_tree()
                 self.solved = True
             # if no, update T by determining the new access string and distinguishing string (sift down)
             else:
@@ -287,7 +289,8 @@ class Learner:
         # Ensure that all -1s have been overwritten
         for row in to_become:
             for entry in row:
-                entry >= 0
+                assert entry >= 0
+
         print("new m_hat:")
         print(to_become)
         return to_become
