@@ -23,7 +23,7 @@ class Learner:
 
         self.access_string_reference.update({key : index})
 
-    def __init__(self, alphabet = ['0','1'], premade_dfa = None):
+    def __init__(self, alphabet = ['0','1'], num_states = -1, premade_dfa = None):
 
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
@@ -40,7 +40,7 @@ class Learner:
         if premade_dfa:
             self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
         else:
-            self.my_teacher = Teacher(self.alphabet)
+            self.my_teacher = Teacher(self.alphabet, num_states = num_states)
 
         # initialize T with just the empty string (lambda)
         self.t = Tree(Node("", None))
