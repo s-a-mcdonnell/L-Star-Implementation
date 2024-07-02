@@ -69,6 +69,7 @@ class Learner:
         for i in range(len(self.alphabet)):
             to_append.append(0)
         
+        print("appending to m_hat")
         self.m_hat.append(to_append)
     
         # equivalence query on initial M_hat
@@ -260,6 +261,7 @@ class Learner:
             for i in range(len(self.alphabet)):
                 to_append.append(-1)
             
+            print("appending to to_become")
             to_become.append(to_append)
         
         #print("M_hat mid-construction: " + str(to_become))
