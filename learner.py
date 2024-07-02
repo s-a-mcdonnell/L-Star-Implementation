@@ -261,7 +261,7 @@ class Learner:
             for i in range(len(self.alphabet)):
                 to_append.append(-1)
             
-            print("appending to to_become")
+            print(f"appending row to to_become for key {key}")
             to_become.append(to_append)
         
         #print("M_hat mid-construction: " + str(to_become))
@@ -287,7 +287,8 @@ class Learner:
         for row in to_become:
             for entry in row:
                 entry >= 0
-
+        print("new m_hat:")
+        print(self.m_hat)
         #print("m_hat updated by construct hypothesis")
         return to_become
 
