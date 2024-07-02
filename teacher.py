@@ -94,7 +94,7 @@ class Teacher:
         return False
     
     @staticmethod
-    def final_state(s, dfa: list[list[int]], alpha):
+    def final_state(s : str, dfa: list[list[int]], alpha):
 
         input = []
 

@@ -161,7 +161,9 @@ class Learner:
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            access_string_shift = self.sift(strng, breaker = True)
+            node_sift = self.sift_return_node(strng, breaker = True)
+            access_string_sift = node_sift.value
+            loop_d = node_sift.parent.value if node_sift.parent else ""
 
             # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
             # TODO: This is a janky way to be using a dictionary. Is this the best-suited ADT for our purposes?
@@ -177,9 +179,9 @@ class Learner:
             
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
-            if access_string_shift != access_string_m_hat:
+            if access_string_sift != access_string_m_hat:
                 print(f"strng {strng}")
-                print(f"Access string from shifting: {access_string_shift if access_string_shift else "empty string"}")
+                print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
                 print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
                 print("breaking loop")
                 break
@@ -198,7 +200,16 @@ class Learner:
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
-        new_d = gamma[j] + node_to_edit.parent.value
+        # TODO: Replacing old d with d from loop
+        # new_d = gamma[j] + node_to_edit.parent.value
+        new_d = gamma[j] + loop_d
+        self.t.print_tree()
+        print(f"node to edit value: {node_to_edit.value}")
+        print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
+        print(f"new distinguishing string: {new_d}")
+        print(f"s[j-1] = {s_j_minus_1}")
+        print(f"gamma[j-1] = {gamma_j_minus_1}")
+
     
         # Create child leaves for node_to_edit, making it an internal node
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)

@@ -7,7 +7,7 @@ dfa_for_testing = [[0, 1, 4], [1, 3, 2], [1, 0, 1], [0, 2, 1], [0, 2, 0]]
 # Initialize learner
 my_learner = Learner(alphabet, dfa_for_testing)
 
-for i in range(2):
+for i in range(5):
     print("---")
 
     print(f"loop iteration {i}")
