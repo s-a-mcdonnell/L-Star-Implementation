@@ -162,6 +162,7 @@ class Learner:
 
 
         j = 0
+        mismatch_found = False
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
             j = i
@@ -192,7 +193,11 @@ class Learner:
                 print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
                 print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
                 print("breaking loop")
+                mismatch_found = True
                 break
+        
+        # Assert that we haven't left the loop just because of iterating through all values of i
+        assert mismatch_found
 
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
@@ -216,9 +221,15 @@ class Learner:
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
-        # TODO: Replacing old d with d from loop
-        # new_d = gamma[j] + node_to_edit.parent.value
         new_d = gamma[j] + loop_d
+
+        # TODO: Testing a new type of distinguishing string (just using a character from gamma, not conc)
+        # TODO: This is a wild attempt at deviating from the algorithm. Let's see how it goes!
+        if self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
+            print(f"Shortening distinguishing string from {new_d} to {gamma[j]}")
+            new_d = gamma[j]
+            assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
+
         print(f"node to edit value: {node_to_edit.value}")
         print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
         print(f"new distinguishing string: {new_d}")
