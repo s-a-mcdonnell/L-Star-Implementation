@@ -219,35 +219,11 @@ class Learner:
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
         s_j_minus_1 = node_to_edit.value
     
-        # replace access string s[j-1] in T with an internal node with two leaf nodes
-        # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
-        # TODO: Figure out what d to concatenate
-        # new_d = gamma[j] + loop_d
-        # new_d = gamma[j] + node_to_edit.parent.value
-        # TODO: Set new_d using further characters from gamma until we get a split between the two access strings (suggested by Scott)
-        new_d = gamma[j]
-        i = 1
-        while self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
-            new_d += gamma[j+i]
-            i += 1
-            assert not (j + i >= len(gamma)) 
+        # TODO: Find the new distinguishing string ("!" is a placeholder)
+        # The new distinguishing string is the character gamma[j] concatonated with
+        # the most recent common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
+        new_d = "!"
 
-
-        # TODO: Testing a new type of distinguishing string (just using a character from gamma, not conc)
-        # TODO: This is a wild attempt at deviating from the algorithm. Let's see how it goes!
-        '''if self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
-            print(f"Shortening distinguishing string from {new_d} to {gamma[j]}")
-            new_d = gamma[j]
-            assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)'''
-        # Truncate until it works
-        # TODO: Intensifying deviation from algorithm here
-        '''while self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
-            print(f"Searching for a distinguishing string for the pair {s_j_minus_1} and {gamma_j_minus_1}")
-            print(f"Shortening distinguishing string from {new_d} to {new_d[0 : len(new_d) - 1]}")
-
-            new_d = new_d[0 : len(new_d) - 1]
-            assert new_d'''
-        # NOTE: Scott says this while distinguishing string issue might be because of the non-binary (4-char) alphabet
 
         assert new_d
         assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
