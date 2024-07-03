@@ -221,14 +221,29 @@ class Learner:
     
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
+        # TODO: Figure out what d to concatenate
         new_d = gamma[j] + loop_d
+        # new_d = gamma[j] + node_to_edit.parent.value
 
         # TODO: Testing a new type of distinguishing string (just using a character from gamma, not conc)
         # TODO: This is a wild attempt at deviating from the algorithm. Let's see how it goes!
-        if self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
+        '''if self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
             print(f"Shortening distinguishing string from {new_d} to {gamma[j]}")
             new_d = gamma[j]
-            assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
+            assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)'''
+        # Truncate until it works
+        # TODO: Intensifying deviation from algorithm here
+        '''while self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
+            print(f"Searching for a distinguishing string for the pair {s_j_minus_1} and {gamma_j_minus_1}")
+            print(f"Shortening distinguishing string from {new_d} to {new_d[0 : len(new_d) - 1]}")
+
+            new_d = new_d[0 : len(new_d) - 1]
+            assert new_d'''
+        # NOTE: Scott says this while distinguishing string issue might be because of the non-binary (4-char) alphabet
+
+        assert new_d
+        assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
+
 
         print(f"node to edit value: {node_to_edit.value}")
         print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
