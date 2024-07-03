@@ -201,7 +201,10 @@ class Learner:
         # NOTE: This is cheating (accessing M) and is only being done for debugging. Delete this for loop
         for access_string in self.access_string_reference.keys():
             # Assert that we haven't "rediscovered" a state NOTE I expect this assertion to be tripped
-            assert Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) != Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet)
+            if Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) == Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet):
+                print(f"preexisting access string {access_string}")
+                print(f"new access string from gamma {gamma_j_minus_1}")                                                                                                    
+                assert Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) != Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet)
     
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
