@@ -222,8 +222,16 @@ class Learner:
         # replace access string s[j-1] in T with an internal node with two leaf nodes
         # the new distinguishing string is the CHARACTER gamma_j concatenated with d where d is the parent distinguishing string
         # TODO: Figure out what d to concatenate
-        new_d = gamma[j] + loop_d
+        # new_d = gamma[j] + loop_d
         # new_d = gamma[j] + node_to_edit.parent.value
+        # TODO: Set new_d using further characters from gamma until we get a split between the two access strings (suggested by Scott)
+        new_d = gamma[j]
+        i = 1
+        while self.my_teacher.member(s_j_minus_1 + new_d) == self.my_teacher.member(gamma_j_minus_1 + new_d):
+            new_d += gamma[j+i]
+            i += 1
+            assert not (j + i >= len(gamma)) 
+
 
         # TODO: Testing a new type of distinguishing string (just using a character from gamma, not conc)
         # TODO: This is a wild attempt at deviating from the algorithm. Let's see how it goes!
