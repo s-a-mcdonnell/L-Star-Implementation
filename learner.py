@@ -238,10 +238,10 @@ class Learner:
         # Set values of node_to_edit's children
         # leaf nodes are the previous access string and the new access string gamma[j-1]
         # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string        
-        if self.my_teacher.member(s_j_minus_1 + new_d):
+        if self.my_teacher.member(s_j_minus_1 + new_d) and not self.my_teacher.member(gamma_j_minus_1 + new_d):
             node_to_edit.right_child.value =  s_j_minus_1
             node_to_edit.left_child.value = gamma_j_minus_1
-        elif self.my_teacher.member(gamma_j_minus_1 + new_d):
+        elif self.my_teacher.member(gamma_j_minus_1 + new_d) and not self.my_teacher.member(s_j_minus_1 + new_d):
             node_to_edit.right_child.value = gamma_j_minus_1
             node_to_edit.left_child.value =  s_j_minus_1
         else:
