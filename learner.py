@@ -80,6 +80,7 @@ class Learner:
             self.solved = True
         # put counterexample gamma into our tree T
         else:
+
             assert type(gamma) is str
 
             assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -196,6 +197,11 @@ class Learner:
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
         print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
+
+        # NOTE: This is cheating (accessing M) and is only being done for debugging. Delete this for loop
+        for access_string in self.access_string_reference.keys():
+            # Assert that we haven't "rediscovered" a state NOTE I expect this assertion to be tripped
+            assert Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) != Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet)
     
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")

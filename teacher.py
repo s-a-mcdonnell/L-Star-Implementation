@@ -84,9 +84,9 @@ class Teacher:
 
         for i in range(1000000):
             s = self.generate_string()
-            if self.member(s) != self.member(s, m_hat, self.alphabet):
+            if self.member(s) != self.member(s, m_hat):
                 assert(type(self.member(s)) is bool)
-                assert(type(self.member(s, m_hat, self.alphabet)) is bool)
+                assert(type(self.member(s, m_hat)) is bool)
                 print("Counterexample found: " + s)
                 return s            
 

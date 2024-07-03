@@ -6,7 +6,7 @@ alphabet = ['a', 'b', 'c', 'd']
 
 # Create learner
 # TODO: Change seed to 1821 to see 5-state M_hat be (wrongly) learned from 4-state M
-my_learner = Learner(alphabet, num_states = 4, seed = 1823)
+my_learner = Learner(alphabet, num_states = 4, seed = 1821)
 
 # Let learner run
 my_learner.lstar_algorithm()
