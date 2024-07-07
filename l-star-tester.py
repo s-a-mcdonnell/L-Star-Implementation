@@ -12,7 +12,7 @@ if len(sys.argv) > 2:
     seed = int(sys.argv[2])
 
 
-alphabet = ['a', 'b']
+alphabet = ['a', 'b', 'c', 'd']
 
 # dfa_for_testing = [[0, 0, 1], [0, 1, 2], [0, 2, 3], [1, 3, 0]]
 
