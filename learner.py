@@ -150,6 +150,11 @@ class Learner:
             print("LOOP COMPLETE IN L STAR")
         print("End L-Star algorithm")
 
+    # Finds and returns the distinguishing string corresponding to the last common ancestor of the access strings s1 and s2 in T
+    # TODO: Write this method
+    def __get_lca(self, s1, s2):
+        pass
+
     # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
     # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
@@ -199,6 +204,9 @@ class Learner:
         # Assert that we haven't left the loop just because of iterating through all values of i
         assert mismatch_found
 
+        # Find the last common ancestor (lca) of access_string_sift and access_string_m_hat in T
+        lca = self.__get_lca(access_string_shift, access_string_m_hat)
+
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
         print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
@@ -221,8 +229,8 @@ class Learner:
     
         # TODO: Find the new distinguishing string ("!" is a placeholder)
         # The new distinguishing string is the character gamma[j] concatonated with
-        # the most recent common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
-        new_d = "!"
+        # the last common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
+        new_d = gamma[j] + lca
 
 
         assert new_d
