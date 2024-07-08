@@ -27,6 +27,7 @@ class Learner:
 
         self.access_string_reference.update({key : index})
 
+
     def draw_graph(self):
 
         # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
@@ -59,6 +60,7 @@ class Learner:
         nx.draw_networkx_edges(self.m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
         nx.draw_networkx_edge_labels(self.m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
         plt.show()
+
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
@@ -147,6 +149,7 @@ class Learner:
         #self.t.print_tree()
 
         print("Initialization done")
+        self.draw_graph()
         # t.print_tree()
         # print("tree printed")
         # print(self.access_string_reference)
@@ -159,6 +162,8 @@ class Learner:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
             print(f"m_hat updated {self.m_hat}")
+            self.draw_graph()
+            
             # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
