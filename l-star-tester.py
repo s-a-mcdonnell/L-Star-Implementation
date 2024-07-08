@@ -104,14 +104,15 @@ dfa_for_testing = __read_dfa(__location__)
 
 # Create learner
 
-# If a DFA was provided, use it
-if dfa_for_testing:
-    my_learner = Learner(alphabet, premade_dfa = dfa_for_testing, display_graphs=show_graphs)
 
-# Else if command-line arguments are provided, pass them to the learner
-# TODO: Enable command-line arguments specifying if graphs should be shown
-elif len(sys.argv) > 2:
+
+# If command-line arguments are provided, pass them to the learner
+if len(sys.argv) > 2:
     my_learner = Learner(alphabet, num_states = num_states, seed = seed, display_graphs=show_graphs)
+
+# Else if a DFA was provided, use it
+elif dfa_for_testing:
+    my_learner = Learner(alphabet, premade_dfa = dfa_for_testing, display_graphs=show_graphs)
 
 # Else allow the DFA to be randomly generated
 else:
