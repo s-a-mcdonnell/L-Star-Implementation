@@ -64,6 +64,13 @@ def __read_dfa(loc):
 
 ##########################################################################################################
 
+# Print usage information
+print("Welcome to the L* Tester")
+print("This program accepts up to three command-line arguments and up to two file inputs")
+print("Command-line arguments: Boolean (True or False, 1 or 0) indicating whether or not graphs are to be drawn, int specifying the number of states in the DFA to be learned, int specifying the seed for a pseudo-randomized DFA")
+print("File inputs: The alphabet to use (alphabet.txt) and a pre-made DFA for testing (dfa.txt)")
+print("----------")
+
 # Use first command-line argument (if present) to determine whether or not to show graphs (default is not)
 show_graphs = False
 if len(sys.argv) > 1:
