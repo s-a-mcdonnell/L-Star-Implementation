@@ -5,9 +5,6 @@ from teacher import Teacher
 
 class Learner:
 
-    # NOTE: I don't think we have to pass the tree t into any of the methods in the Learner class because it belongs
-    # TODO: NOTHING IS TESTED except for init :)
-
     # Updates the access string reference dictionary with the given values
     # Isolated to its own method for debugging purposes (prevent clobbering)
     def update_dictionary(self, key : str, index : int):
@@ -100,12 +97,7 @@ class Learner:
         
         print("m_hat at end of initialization: " + str(self.m_hat))
 
-        #self.t.print_tree()
-
         print("Initialization done")
-        # t.print_tree()
-        # print("tree printed")
-        # print(self.access_string_reference)
 
 
     def lstar_algorithm(self):
@@ -115,21 +107,12 @@ class Learner:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
             print(f"m_hat updated {self.m_hat}")
-            # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
 
             print("Counterexample is ===> " + str(gamma))
-            if not gamma:
-                # if yes we are done
-                print("DFA solved!")
-                print("Learned DFA:")
-                print(self.m_hat)
-                print("with tree:")
-                self.t.print_tree()
-                self.solved = True
-            # if no, update T by determining the new access string and distinguishing string (sift down)
-            else:
+            if gamma:
+                # if a counterexample is provided, update T by determining the new access string and distinguishing string (sift down)
                 assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
 
                 assert type(gamma) is str
@@ -140,12 +123,22 @@ class Learner:
                 print("number of entries in dictionary: " + str(len(self.access_string_reference)))
                 print("number of rows in M_hat: " + str(len(self.m_hat)))
 
-                #self.t.print_tree()
+            else:
+                # If no counterexample is provided, the DFA has been solved
+                self.solved = True
             print("LOOP COMPLETE IN L STAR")
+
+        # If we have exited the loop, we have solved the DFA
+        # if yes we are done
+        print("DFA solved!")
+        print(f"Learned DFA with {len(self.m_hat)} states:")
+        print(self.m_hat)
+        print("with tree:")
+        self.t.print_tree()
+        
         print("End L-Star algorithm")
 
     # Finds and returns the distinguishing string corresponding to the last common ancestor of the access strings s1 and s2 in T
-    # TODO: Write this method
     def __get_lca(self, s1 , s2):
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
@@ -227,15 +220,6 @@ class Learner:
         gamma_j_minus_1 = gamma[0 : j]
         print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
 
-        # NOTE: This is cheating (accessing M) and is only being done for debugging. Delete this for loop
-        # TODO: Delete this for loop
-        for access_string in self.access_string_reference.keys():
-            # Assert that we haven't "rediscovered" a state NOTE I expect this assertion to be tripped
-            if Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) == Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet):
-                print(f"preexisting access string {access_string}")
-                print(f"new access string from gamma {gamma_j_minus_1}")                                                                                                    
-                assert Teacher.final_state(access_string, self.my_teacher.m, self.my_teacher.alphabet) != Teacher.final_state(gamma_j_minus_1, self.my_teacher.m, self.my_teacher.alphabet)
-    
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
         self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
@@ -244,7 +228,6 @@ class Learner:
         node_to_edit = self.sift_return_node(gamma_j_minus_1)
         s_j_minus_1 = node_to_edit.value
     
-        # TODO: Find the new distinguishing string ("!" is a placeholder)
         # The new distinguishing string is the character gamma[j] concatonated with
         # the last common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
         new_d = gamma[j] + lca
@@ -362,7 +345,6 @@ class Learner:
 
             # membership query on sd (concatenated) 
             # if membership query is accepted, current node is right child of current node
-            '''if self.my_teacher.member(str(s) + str(d)):'''
             if self.my_teacher.member(s + d):
                 current = current.right_child
             # else (if rejected), current node is left child of current node
@@ -378,10 +360,6 @@ class Learner:
         #print("loops to find leaf: " + str(loops_to_find_leaf))
 
         # Check that access string is properly stored
-        '''if not (current.value in self.access_string_reference.keys()):
-            print("current value: " + current.value)
-            print("dictionary: " + str(self.access_string_reference))
-            exit(1)'''
         assert (current.value in self.access_string_reference.keys())
         
         # Return the access string at the leaf found
