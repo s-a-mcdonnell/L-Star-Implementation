@@ -154,7 +154,7 @@ class Learner:
 
     ##########################################################################################################
 
-    # Finds and returns the distinguishing string corresponding to the last common ancestor of the access strings s1 and s2 in T
+    # Finds and returns the distinguishing string corresponding to the last (most recent) common ancestor of the access strings s1 and s2 in T
     def __get_lca(self, s1 , s2):
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
