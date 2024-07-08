@@ -8,7 +8,9 @@ class Learner:
     # Updates the access string reference dictionary with the given values
     # Isolated to its own method for debugging purposes (prevent clobbering)
     def update_dictionary(self, key : str, index : int):
-        print("adding key " + key + " to dictionary")
+        # TODO: Delete debugging print statement
+        # print("adding key " + key + " to dictionary")
+        
         # assert (not key in self.access_string_reference.keys()) 
 
         # Print debugging information if trying to clobber a pre-existing key:
@@ -106,11 +108,15 @@ class Learner:
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
-            print(f"m_hat updated {self.m_hat}")
+            
+            # TODO: Delete debugging print statement
+            # print(f"m_hat updated {self.m_hat}")
+            
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
 
-            print("Counterexample is ===> " + str(gamma))
+            # TODO: Delete debugging print statement
+            # print("Counterexample is ===> " + str(gamma))
             if gamma:
                 # if a counterexample is provided, update T by determining the new access string and distinguishing string (sift down)
                 assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -120,13 +126,16 @@ class Learner:
                 # call update_tree (includes updating dictionary)
                 self.update_tree(gamma)
 
-                print("number of entries in dictionary: " + str(len(self.access_string_reference)))
-                print("number of rows in M_hat: " + str(len(self.m_hat)))
+                # TODO: Delete debugging print statements
+                # print("number of entries in dictionary: " + str(len(self.access_string_reference)))
+                # print("number of rows in M_hat: " + str(len(self.m_hat)))
 
             else:
                 # If no counterexample is provided, the DFA has been solved
                 self.solved = True
-            print("LOOP COMPLETE IN L STAR")
+
+            # TODO: Delete debugging print statement
+            # print("LOOP COMPLETE IN L STAR")
 
         # If we have exited the loop, we have solved the DFA
         # if yes we are done
@@ -174,8 +183,9 @@ class Learner:
     # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
-        print("Update tree called")
-        print(f"Updating the tree with {gamma}")
+        # TODO: Delete debugging print statements
+        # print("Update tree called")
+        # print(f"Updating the tree with {gamma}")
 
         # Assert that gamma really is a counterexample
         assert bool(self.my_teacher.member(gamma)) != bool(self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -203,10 +213,11 @@ class Learner:
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
             if access_string_sift != access_string_m_hat:
-                print(f"strng {strng}")
-                print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
-                print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
-                print("breaking loop")
+                # TODO: Delete debugging print statements
+                # print(f"strng {strng}")
+                # print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
+                # print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
+                # print("breaking loop")
                 mismatch_found = True
                 break
         
@@ -218,7 +229,8 @@ class Learner:
 
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
-        print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
+        # TODO: Delete debugging print statement
+        #print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
 
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
@@ -236,15 +248,15 @@ class Learner:
         assert new_d
         assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
 
+        # TODO: Delete debugging print statements
+        # print(f"node to edit value: {node_to_edit.value}")
+        # print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
+        # print(f"new distinguishing string: {new_d}")
+        # print(f"s[j-1] = {s_j_minus_1}")
+        # print(f"gamma[j-1] = {gamma_j_minus_1}")
 
-        print(f"node to edit value: {node_to_edit.value}")
-        print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
-        print(f"new distinguishing string: {new_d}")
-        print(f"s[j-1] = {s_j_minus_1}")
-        print(f"gamma[j-1] = {gamma_j_minus_1}")
-
-        self.t.print_tree()
-        print(self.m_hat)
+        # self.t.print_tree()
+        # print(self.m_hat)
 
 
     
@@ -270,12 +282,14 @@ class Learner:
         assert node_to_edit.parent
         node_to_edit.value = new_d
 
+        # TODO: Delete debugging print statement
         # print("update tree done.")
 
 
     # input: T is our classification tree
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
+        # TODO: Delete debugging print statement
         # print("construct hypothesis called")
         to_become = []
 
@@ -293,7 +307,8 @@ class Learner:
             for i in range(len(self.alphabet)):
                 to_append.append(-1)
             
-            print(f"appending row to to_become for key {key}")
+            # TODO: Delete debugging print statements
+            # print(f"appending row to to_become for key {key}")
             to_become.append(to_append)
         
         #print("M_hat mid-construction: " + str(to_become))
@@ -309,6 +324,7 @@ class Learner:
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
+                # TODO: Delete debugging print statements
                 #print("dictionary: " + str(self.access_string_reference))
                 #print("key: " + key)
                 #print("row index: " + str(self.access_string_reference[key]))
@@ -320,14 +336,16 @@ class Learner:
             for entry in row:
                 assert entry >= 0
 
-        print("new m_hat:")
-        print(to_become)
+        # TODO: Delete debugging print statements
+        # print("new m_hat:")
+        # print(to_become)
         return to_become
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
     def sift_return_node(self, s):
-        print("sift_return_node called on " + (s if s else "the empty string"))
+        # TODO: Delete debugging print statement
+        # print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
         current = self.t.root
@@ -363,7 +381,8 @@ class Learner:
         assert (current.value in self.access_string_reference.keys())
         
         # Return the access string at the leaf found
-        print(f"ending sift after {loops_to_find_leaf} loops. returning NODE {self.access_string_reference[current.value]} with access string {current.value if current.value else "empty"}")
+        # TODO: Delete debugging print statement
+        # print(f"ending sift after {loops_to_find_leaf} loops. returning NODE {self.access_string_reference[current.value]} with access string {current.value if current.value else "empty"}")
         return current
 
 

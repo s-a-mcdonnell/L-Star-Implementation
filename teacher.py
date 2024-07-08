@@ -4,7 +4,8 @@ class Teacher:
 
     # Constructor
     def __init__(self, alphabet, num_states = -1, seed = 1821, premade_dfa = None):
-        print("teacher created")
+        # TODO: Delete debugging print statement
+        # print("teacher created")
 
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
@@ -64,6 +65,7 @@ class Teacher:
                     arrows_created += 1
             
             # Print DFA
+            print("DFA to learn:")
             for row in self.m:
                 print(row)
 
@@ -87,7 +89,8 @@ class Teacher:
             if self.member(s) != self.member(s, m_hat):
                 assert(type(self.member(s)) is bool)
                 assert(type(self.member(s, m_hat)) is bool)
-                print("Counterexample found: " + s)
+                # TODO: Delete debugging print statement
+                # print("Counterexample found: " + s)
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
