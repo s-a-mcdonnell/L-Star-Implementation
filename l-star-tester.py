@@ -64,15 +64,26 @@ def __read_dfa(loc):
 
 ##########################################################################################################
 
+# Use first command-line argument (if present) to determine whether or not to show graphs (default is not)
+show_graphs = False
+if len(sys.argv) > 1:
+    if sys.argv[1].lower() == "true" or sys.argv[1] == '1':
+        show_graphs = True
+    elif sys.argv[1].lower() == "false" or sys.argv[1] == '0':
+        pass
+    else:
+        print(f"Error: Invalid boolean specifying if graphs are to be shown: {sys.argv[1]}")
+        print("Graphs will not be shown")
+
 num_states = -1
 
-if len(sys.argv) > 1:
-    num_states = int(sys.argv[1])
+if len(sys.argv) > 2:
+    num_states = int(sys.argv[2])
 
 seed = 1821
 
-if len(sys.argv) > 2:
-    seed = int(sys.argv[2])
+if len(sys.argv) > 3:
+    seed = int(sys.argv[3])
 
 # Import alphabet from text file (if provided, else use binary alphabet)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
@@ -88,16 +99,16 @@ dfa_for_testing = __read_dfa(__location__)
 
 # If a DFA was provided, use it
 if dfa_for_testing:
-    my_learner = Learner(alphabet, premade_dfa = dfa_for_testing)
+    my_learner = Learner(alphabet, premade_dfa = dfa_for_testing, display_graphs=show_graphs)
 
 # Else if command-line arguments are provided, pass them to the learner
 # TODO: Enable command-line arguments specifying if graphs should be shown
 elif len(sys.argv):
-    my_learner = Learner(alphabet, num_states = num_states, seed = seed)
+    my_learner = Learner(alphabet, num_states = num_states, seed = seed, display_graphs=show_graphs)
 
 # Else allow the DFA to be randomly generated
 else:
-    my_learner = Learner(alphabet=alphabet)
+    my_learner = Learner(alphabet=alphabet, display_graphs=show_graphs)
 
 
 # Let learner run
