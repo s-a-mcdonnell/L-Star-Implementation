@@ -23,7 +23,10 @@ class Learner:
 
         # If a premade DFA was provided (for testing), use it
         if premade_dfa:
+            assert len(premade_dfa[0]) == len(alphabet) + 1
+
             self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
+
         
         # Else the DFA to be learned will be constructed by the teacher
         else:
