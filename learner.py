@@ -62,7 +62,7 @@ class Learner:
         for i in range(len(self.alphabet)):
             to_append.append(0)
         
-        print("appending to m_hat")
+        # print("appending to m_hat")
         self.m_hat.append(to_append)
     
         # equivalence query on initial M_hat
@@ -79,7 +79,7 @@ class Learner:
             assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
 
 
-            print("Counterexample found, adding to tree.")
+            # print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
                 self.t.root.right_child = Node(gamma, self.t.root, 1)
                 self.t.root.left_child = Node("", self.t.root, 1)
@@ -97,9 +97,9 @@ class Learner:
             for entry in row:
                 assert entry >= 0
         
-        print("m_hat at end of initialization: " + str(self.m_hat))
+        # print("m_hat at end of initialization: " + str(self.m_hat))
 
-        print("Initialization done")
+        print("Learner initialization complete")
 
 
     def lstar_algorithm(self):

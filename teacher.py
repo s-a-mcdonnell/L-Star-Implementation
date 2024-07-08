@@ -66,9 +66,7 @@ class Teacher:
             
             # Print DFA
             print("DFA to learn:")
-            for row in self.m:
-                print(row)
-
+            print(self.m)
 
     # equivalency query
     # takes the DFA hypothesis m_hat
