@@ -197,7 +197,7 @@ class Learner:
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            node_sift = self.sift_return_node(strng, breaker = True)
+            node_sift = self.sift_return_node(strng)
             access_string_sift = node_sift.value
             loop_d = node_sift.parent.value if node_sift.parent else ""
 
@@ -206,12 +206,6 @@ class Learner:
             row_in_m_hat = self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet))
             my_dict = self.access_string_reference
             access_string_m_hat = list(my_dict.keys())[list(my_dict.values()).index(row_in_m_hat)]
-
-            # check if the returned access string accepts or rejects in M and M_hat
-            # repeat loop until gamma[i] gives you differing results in M and M_hat (s[i] does not equal s_hat[i])
-            '''if self.my_teacher.member(access_string) != self.my_teacher.member(access_string, self.m_hat):
-                print("breaking loop")
-                break'''
             
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
             #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
@@ -349,16 +343,13 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
-    def sift_return_node(self, s, breaker : bool = False):
+    def sift_return_node(self, s):
         print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
         current = self.t.root
 
         loops_to_find_leaf = 0
-
-        '''if breaker:
-            breakpoint()'''
 
         # Loop as long as current has a left child (that is, as long as current is not a leaf)
         while (current.left_child):
@@ -400,10 +391,10 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
-    def sift(self, s, breaker : bool = False):
+    def sift(self, s):
         #print("---")
         #print("sift called on " + (s if s else "the empty string"))
-        return self.sift_return_node(s, breaker).value
+        return self.sift_return_node(s).value
 
 
 class Node:
