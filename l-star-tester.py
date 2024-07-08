@@ -103,7 +103,7 @@ if dfa_for_testing:
 
 # Else if command-line arguments are provided, pass them to the learner
 # TODO: Enable command-line arguments specifying if graphs should be shown
-elif len(sys.argv):
+elif len(sys.argv) > 2:
     my_learner = Learner(alphabet, num_states = num_states, seed = seed, display_graphs=show_graphs)
 
 # Else allow the DFA to be randomly generated
