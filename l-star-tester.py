@@ -14,7 +14,7 @@ if len(sys.argv) > 2:
 
 alphabet = ['a', 'b']
 
-#dfa_for_testing = [[0, 0, 1], [0, 1, 2], [0, 2, 3], [1, 3, 0]]
+# dfa_for_testing = [[0, 0, 1], [0, 1, 2], [0, 2, 3], [1, 3, 0]]
 
 # Create learner
 # my_learner = Learner(alphabet, premade_dfa = dfa_for_testing)

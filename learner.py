@@ -1,26 +1,11 @@
 from teacher import Teacher
 
-# Initialize T and ^M
-# Go through the loop
+
+##############################################################################################################
 
 class Learner:
 
-    # Updates the access string reference dictionary with the given values
-    # Isolated to its own method for debugging purposes (prevent clobbering)
-    def update_dictionary(self, key : str, index : int):
-        # TODO: Delete debugging print statement
-        # print("adding key " + key + " to dictionary")
-        
-        # assert (not key in self.access_string_reference.keys()) 
-
-        # Print debugging information if trying to clobber a pre-existing key:
-        if key in self.access_string_reference.keys():
-            print("trying to clobber key " + key)
-            self.sift(key)
-            #exit(1)
-            assert not key in self.access_string_reference.keys()
-
-        self.access_string_reference.update({key : index})
+    ##########################################################################################################
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
@@ -101,6 +86,26 @@ class Learner:
 
         print("Learner initialization complete")
 
+    ##########################################################################################################
+
+    # Updates the access string reference dictionary with the given values
+    # Isolated to its own method for debugging purposes (prevent clobbering)
+    def update_dictionary(self, key : str, index : int):
+        # TODO: Delete debugging print statement
+        # print("adding key " + key + " to dictionary")
+        
+        # assert (not key in self.access_string_reference.keys()) 
+
+        # Print debugging information if trying to clobber a pre-existing key:
+        if key in self.access_string_reference.keys():
+            print("trying to clobber key " + key)
+            self.sift(key)
+            #exit(1)
+            assert not key in self.access_string_reference.keys()
+
+        self.access_string_reference.update({key : index})
+
+    ##########################################################################################################
 
     def lstar_algorithm(self):
         print("running l-star")
@@ -147,6 +152,8 @@ class Learner:
         
         print("End L-Star algorithm")
 
+    ##########################################################################################################
+
     # Finds and returns the distinguishing string corresponding to the last common ancestor of the access strings s1 and s2 in T
     def __get_lca(self, s1 , s2):
         # Get the tree nodes corresponding to the two passed access strings
@@ -176,8 +183,8 @@ class Learner:
 
         # Return the distinguishing string assosciated with the LCA
         return n1.value
-
-        return ""
+    
+    ##########################################################################################################
 
     # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
     # output: Edits T to update it (returns nothing)
@@ -285,6 +292,7 @@ class Learner:
         # TODO: Delete debugging print statement
         # print("update tree done.")
 
+    ##########################################################################################################
 
     # input: T is our classification tree
     # output: hypothesis M_hat constructed from T
@@ -341,6 +349,8 @@ class Learner:
         # print(to_become)
         return to_become
 
+    ##########################################################################################################
+
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
     def sift_return_node(self, s):
@@ -385,6 +395,7 @@ class Learner:
         # print(f"ending sift after {loops_to_find_leaf} loops. returning NODE {self.access_string_reference[current.value]} with access string {current.value if current.value else "empty"}")
         return current
 
+    ##########################################################################################################
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
@@ -392,9 +403,14 @@ class Learner:
         #print("---")
         #print("sift called on " + (s if s else "the empty string"))
         return self.sift_return_node(s).value
+    
+    ##########################################################################################################
 
+##############################################################################################################
 
 class Node:
+
+    ##########################################################################################################
 
     def __init__(self, value : str, parent, level):
         self.value = value
@@ -407,12 +423,19 @@ class Node:
         
         # The level of the tree at which the node is located (root = 0)
         self.level = level
+    
+    ##########################################################################################################
 
+##############################################################################################################
 
 class Tree:
 
+    ##########################################################################################################
+
     def __init__(self, root: Node):
         self.root = root
+
+    ##########################################################################################################
 
     # other methods go here ie sorting stuff
     def print_tree(self):
@@ -434,4 +457,7 @@ class Tree:
             # If the string is empty, print "empty." If it is NoneType, indicate lack of initialization. If it has a non-empty value, print it
             # Also print the level at which the node is located
             print(f"{"d" if to_print.left_child else "s"}: {("empty" if to_print.value == "" else to_print.value) if (to_print.value != None) else "not initialized"}, level {to_print.level}")
-            
+
+    ##########################################################################################################
+
+##############################################################################################################

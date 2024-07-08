@@ -1,6 +1,10 @@
 import random
 
+##############################################################################################################
+
 class Teacher:
+
+    ##########################################################################################################
 
     # Constructor
     def __init__(self, alphabet, num_states = -1, seed = 1821, premade_dfa = None):
@@ -18,9 +22,6 @@ class Teacher:
 
         # Using this guide to PRN generation in Python: https://www.tutorialspoint.com/generate-pseudo-random-numbers-in-python
         random.seed(seed)
-
-       
-        
         
         # If a premade DFA was provided, use it
         if premade_dfa:
@@ -68,6 +69,8 @@ class Teacher:
             print("DFA to learn:")
             print(self.m)
 
+    ##########################################################################################################
+
     # equivalency query
     # takes the DFA hypothesis m_hat
     # returns either a counterexample or False (indicating that the DFAs match)
@@ -94,6 +97,8 @@ class Teacher:
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
         print("No counterexample found")
         return False
+
+    ##########################################################################################################
     
     @staticmethod
     def final_state(s : str, dfa: list[list[int]], alpha):
@@ -117,6 +122,7 @@ class Teacher:
         # Return final state
         return dfa[next_state_index]
         
+    ##########################################################################################################
 
     # membership query
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
@@ -133,6 +139,8 @@ class Teacher:
         final_state : list[int] = Teacher.final_state(s, dfa, alpha)
         return bool(final_state[0])
 
+    ##########################################################################################################
+
     def generate_string(self):
 
         strg = ""
@@ -143,3 +151,7 @@ class Teacher:
             strg += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
         
         return strg
+
+    ##########################################################################################################
+
+##############################################################################################################
