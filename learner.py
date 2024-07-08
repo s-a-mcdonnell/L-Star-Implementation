@@ -30,41 +30,52 @@ class Learner:
 
     def draw_graph(self):
 
+        print("draw graph called.")
+
         # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
+        m_graph = nx.MultiDiGraph(directed=True)
 
         accepting = []
 
         for row in self.m_hat:
-                # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
-                self.m_graph.add_node(self.m_hat.index(row))
-                if row[0] == 1:
-                    accepting.append(self.m_hat.index(row))
+            # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
+            # TODO: make the label of the node the entry in the dictionary it corresponds to perhaps??
+            m_graph.add_node(self.m_hat.index(row), access=self.access_string_reference[self.m_hat.index(row)])
+            if row[0] == 1:
+                accepting.append(self.m_hat.index(row))
 
-                # edge from node "row index" to node "row[i]" where it is labelled by the character in language[i]
-                for i in range(1, len(row)):
-                    self.m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
+            # edge from node "row index" to node "row[i]" where it is labelled by the character in language[i]
+            for i in range(1, len(row)):
+                m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
 
         # display the graph
+        print(self.m_hat)
+        print(m_graph.nodes())
+        print(m_graph.edges())
+        print("boop")
 
         # TODO: make accepting nodes a different color perhaps?
 
-        labels = {(u, v, key): data["data"] for u, v, key, data in self.m_graph.edges(keys = True, data = True)}
+        # draw the graph
 
-        pos = nx.shell_layout(self.m_graph)
+        labels = {(u, v, key): data["data"] for u, v, key, data in m_graph.edges(keys = True, data = True)}
+
+        pos = nx.shell_layout(m_graph)
         connectionstyle = [f"arc3,rad={r}" for r in it.accumulate([0.15] * 4)]
         # ^^^ from this multigraph tutorial https://networkx.org/documentation/stable/auto_examples/drawing/plot_multigraphs.html
         
-        nx.draw_networkx_nodes(self.m_graph, pos)
-        nx.draw_networkx_labels(self.m_graph, pos, font_size=10)
+        nx.draw_networkx_nodes(m_graph, pos)
+        nx.draw_networkx_labels(m_graph, pos, font_size=10)
 
-        nx.draw_networkx_edges(self.m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
-        nx.draw_networkx_edge_labels(self.m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
+        nx.draw_networkx_edges(m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
+        nx.draw_networkx_edge_labels(m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
+
+        nx.draw_networkx(m_graph, with_labels = True)
         plt.show()
+        print("plot printed.")
 
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
-
-        self.m_graph = nx.MultiDiGraph(directed = True)
 
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
@@ -112,6 +123,9 @@ class Learner:
         
         print("appending to m_hat")
         self.m_hat.append(to_append)
+
+        # draw m_hat graph here, as m_hat is not updated in initialization past this point
+        self.draw_graph()
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
@@ -149,7 +163,6 @@ class Learner:
         #self.t.print_tree()
 
         print("Initialization done")
-        self.draw_graph()
         # t.print_tree()
         # print("tree printed")
         # print(self.access_string_reference)
@@ -162,7 +175,9 @@ class Learner:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
             print(f"m_hat updated {self.m_hat}")
+
             self.draw_graph()
+            print("graph displayed.")
             
             # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
