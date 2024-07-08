@@ -71,6 +71,8 @@ print("Command-line arguments: Boolean (True or False, 1 or 0) indicating whethe
 print("File inputs: The alphabet to use (alphabet.txt) and a pre-made DFA for testing (dfa.txt)")
 print("----------")
 
+# Parse inputs:
+
 # Use first command-line argument (if present) to determine whether or not to show graphs (default is not)
 show_graphs = False
 if len(sys.argv) > 1:
@@ -102,9 +104,7 @@ dfa_for_testing = __read_dfa(__location__)
 
 
 
-# Create learner
-
-
+# Create learner:
 
 # If command-line arguments are provided, pass them to the learner
 if len(sys.argv) > 2:
@@ -119,5 +119,5 @@ else:
     my_learner = Learner(alphabet=alphabet, display_graphs=show_graphs)
 
 
-# Let learner run
+# Let algorithm run in learner
 my_learner.lstar_algorithm()
