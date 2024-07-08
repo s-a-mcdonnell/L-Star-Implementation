@@ -39,8 +39,7 @@ class Learner:
 
         for row in self.m_hat:
             # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
-            # TODO: make the label of the node the entry in the dictionary it corresponds to perhaps??
-            # need to get the value from the key
+
             access_string = next(key for key in self.access_string_reference.keys() if self.access_string_reference[key] == self.m_hat.index(row))
             print(access_string)
 
@@ -52,12 +51,6 @@ class Learner:
             for i in range(1, len(row)):
                 print(self.alphabet[i-1])
                 m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
-
-        # display the graph
-        print(self.m_hat)
-        print(m_graph.nodes())
-        print(m_graph.edges())
-        print("boop")
 
         # TODO: make accepting nodes a different color perhaps?
 
@@ -187,6 +180,7 @@ class Learner:
             self.m_hat = self.construct_hypothesis()
             print(f"m_hat updated {self.m_hat}")
 
+            # TODO: why is it not drawing graphs correctly other than the initial one????
             self.draw_graph()
             print("graph displayed.")
             
