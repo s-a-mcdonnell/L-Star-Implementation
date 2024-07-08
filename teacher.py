@@ -1,10 +1,15 @@
 import random
 
+##############################################################################################################
+
 class Teacher:
+
+    ##########################################################################################################
 
     # Constructor
     def __init__(self, alphabet, num_states = -1, seed = 1821, premade_dfa = None):
-        print("teacher created")
+        # TODO: Delete debugging print statement
+        # print("teacher created")
 
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
@@ -17,9 +22,6 @@ class Teacher:
 
         # Using this guide to PRN generation in Python: https://www.tutorialspoint.com/generate-pseudo-random-numbers-in-python
         random.seed(seed)
-
-       
-        
         
         # If a premade DFA was provided, use it
         if premade_dfa:
@@ -31,7 +33,7 @@ class Teacher:
             # NOTE: The upper limit here is arbitrarily chosen
             # NOTE: Not all of these will be accessible, depending on how the arrows point
             if num_states == -1:
-                num_states = random.randint(1, 40)
+                num_states = random.randint(1, 100)
 
             # The DFA (M) is a matrix in which the rows are the states
             # The first entry in each row is a boolean in int form (0 or 1) indicating whether the state is an accept (1) or reject (0) state
@@ -64,9 +66,10 @@ class Teacher:
                     arrows_created += 1
             
             # Print DFA
-            for row in self.m:
-                print(row)
+            print("DFA to learn:")
+            print(self.m)
 
+    ##########################################################################################################
 
     # equivalency query
     # takes the DFA hypothesis m_hat
@@ -84,15 +87,18 @@ class Teacher:
 
         for i in range(1000000):
             s = self.generate_string()
-            if self.member(s) != self.member(s, m_hat, self.alphabet):
+            if self.member(s) != self.member(s, m_hat):
                 assert(type(self.member(s)) is bool)
-                assert(type(self.member(s, m_hat, self.alphabet)) is bool)
-                print("Counterexample found: " + s)
+                assert(type(self.member(s, m_hat)) is bool)
+                # TODO: Delete debugging print statement
+                # print("Counterexample found: " + s)
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
         print("No counterexample found")
         return False
+
+    ##########################################################################################################
     
     @staticmethod
     def final_state(s : str, dfa: list[list[int]], alpha):
@@ -116,6 +122,7 @@ class Teacher:
         # Return final state
         return dfa[next_state_index]
         
+    ##########################################################################################################
 
     # membership query
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
@@ -132,13 +139,19 @@ class Teacher:
         final_state : list[int] = Teacher.final_state(s, dfa, alpha)
         return bool(final_state[0])
 
+    ##########################################################################################################
+
     def generate_string(self):
 
         strg = ""
             
         # NOTE: The choice of maximum length of a string is arbitrary
         # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
-        for i in range(0, random.randint(0, 10)):
+        for i in range(0, random.randint(0, 15)):
             strg += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
         
         return strg
+
+    ##########################################################################################################
+
+##############################################################################################################
