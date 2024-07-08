@@ -10,10 +10,16 @@ class Learner:
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
         self.solved = False
-        # intialize alphabet and teacher
-        # Note that the alphabet must contains characters (one-character strings), not ints
+        # Intialize alphabet
         self.alphabet = alphabet
+
+        # Note that the alphabet must contains characters (strings of length one), not longer strings or ints
+        for character in alphabet:
+            assert type(character) is str
+            assert len(character) == 1
         
+        # Initialize teacher
+
         # If a premade DFA was provided (for testing), use it
         if premade_dfa:
             self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
