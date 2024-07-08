@@ -17,7 +17,7 @@ alphabet = ['0', '1']
 dfa_for_testing = [[0, 0, 1], [0, 1, 2], [0, 2, 3], [1, 3, 0]]
 
 # Create learner
-my_learner = Learner(alphabet, premade_dfa = dfa_for_testing)
+my_learner = Learner(alphabet, premade_dfa = dfa_for_testing, display_graphs=True)
 #my_learner = Learner(alphabet, num_states = num_states, seed = seed)
 
 # Let learner run

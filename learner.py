@@ -10,7 +10,7 @@ class Learner:
 
     ##########################################################################################################
 
-
+    # Draws current m_hat
     def draw_graph(self):
 
         print("draw graph called.")
@@ -60,13 +60,17 @@ class Learner:
 
         plt.show()
         print("plot printed.")
+    
+    ##########################################################################################################
 
-
-    def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
+    def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None, display_graphs = False):
 
         self.solved = False
         # Intialize alphabet
         self.alphabet = alphabet
+
+        # Whether or not to draw the graphs
+        self.graphs = display_graphs
 
         # Note that the alphabet must contains characters (strings of length one), not longer strings or ints
         for character in alphabet:
@@ -138,7 +142,8 @@ class Learner:
         print("access dictionary: " + str(self.access_string_reference))
 
         # draw m_hat graph here, as m_hat is not updated in initialization past this point
-        self.draw_graph()
+        if self.graphs:
+            self.draw_graph()
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
@@ -199,8 +204,9 @@ class Learner:
             
             print(f"m_hat updated {self.m_hat}")
 
-            self.draw_graph()
-            print("graph displayed.")
+            if self.graphs:
+                self.draw_graph()
+                print("graph displayed.")
             
             # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
