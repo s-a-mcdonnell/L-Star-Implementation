@@ -1,5 +1,8 @@
 from teacher import Teacher
 
+import matplotlib.pyplot as plt
+import networkx as nx
+
 # Initialize T and ^M
 # Go through the loop
 
@@ -22,6 +25,9 @@ class Learner:
             assert not key in self.access_string_reference.keys()
 
         self.access_string_reference.update({key : index})
+
+    def draw_m_hat(self):
+        pass
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
