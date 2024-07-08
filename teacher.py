@@ -31,7 +31,7 @@ class Teacher:
             # NOTE: The upper limit here is arbitrarily chosen
             # NOTE: Not all of these will be accessible, depending on how the arrows point
             if num_states == -1:
-                num_states = random.randint(1, 40)
+                num_states = random.randint(1, 100)
 
             # The DFA (M) is a matrix in which the rows are the states
             # The first entry in each row is a boolean in int form (0 or 1) indicating whether the state is an accept (1) or reject (0) state
@@ -138,7 +138,7 @@ class Teacher:
             
         # NOTE: The choice of maximum length of a string is arbitrary
         # Create a string of (pseudo-)random length, with each character (pseudo-)randomly chosen from the alphabet
-        for i in range(0, random.randint(0, 10)):
+        for i in range(0, random.randint(0, 15)):
             strg += self.alphabet[random.randint(0, len(self.alphabet) - 1)]
         
         return strg
