@@ -72,7 +72,6 @@ print("File inputs: The alphabet to use (alphabet.txt) and a pre-made DFA for te
 print("----------")
 
 # Parse inputs:
-
 # Use first command-line argument (if present) to determine whether or not to show graphs (default is not)
 show_graphs = False
 if len(sys.argv) > 1:
@@ -84,13 +83,13 @@ if len(sys.argv) > 1:
         print(f"Error: Invalid boolean specifying if graphs are to be shown: {sys.argv[1]}")
         print("Graphs will not be shown")
 
+# Set number of states in DFA (if provided)
 num_states = -1
-
 if len(sys.argv) > 2:
     num_states = int(sys.argv[2])
 
+# Set seed for pseudo-random number generation (if provided)
 seed = 1821
-
 if len(sys.argv) > 3:
     seed = int(sys.argv[3])
 
@@ -102,10 +101,7 @@ print(f"alphabet: {alphabet}")
 # Read DFA from text file (if provided)
 dfa_for_testing = __read_dfa(__location__)
 
-
-
 # Create learner:
-
 # If command-line arguments are provided, pass them to the learner
 if len(sys.argv) > 2:
     my_learner = Learner(alphabet, num_states = num_states, seed = seed, display_graphs=show_graphs)
