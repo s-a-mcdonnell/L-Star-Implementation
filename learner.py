@@ -117,7 +117,7 @@ class Learner:
         # Print debugging information if trying to clobber a pre-existing key:
         if key in self.access_string_reference.keys():
             print("trying to clobber key " + key)
-            self.sift(key)
+            self.__sift(key)
             #exit(1)
             assert not key in self.access_string_reference.keys()
 
@@ -176,8 +176,8 @@ class Learner:
     def __get_lca(self, s1 , s2):
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
-        n1 = self.sift_return_node(s1)
-        n2 = self.sift_return_node(s2)
+        n1 = self.__sift_return_node(s1)
+        n2 = self.__sift_return_node(s2)
 
         # Travel up the tree until you've found the point in n1 and n2's family trees when they are on the same level
         while n1.level > n2.level:
@@ -225,7 +225,7 @@ class Learner:
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            node_sift = self.sift_return_node(strng)
+            node_sift = self.__sift_return_node(strng)
             access_string_sift = node_sift.value
             loop_d = node_sift.parent.value if node_sift.parent else ""
 
@@ -262,7 +262,7 @@ class Learner:
         self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
         
         # Get node in tree T to edit
-        node_to_edit = self.sift_return_node(gamma_j_minus_1)
+        node_to_edit = self.__sift_return_node(gamma_j_minus_1)
         s_j_minus_1 = node_to_edit.value
     
         # The new distinguishing string is the character gamma[j] concatonated with
@@ -346,7 +346,7 @@ class Learner:
         for key in self.access_string_reference.keys():
             # for each symbol b in the language, sift
             for b in self.alphabet:
-                resulting_state = self.sift(key + b)
+                resulting_state = self.__sift(key + b)
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
@@ -371,7 +371,7 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
-    def sift_return_node(self, s):
+    def __sift_return_node(self, s):
         # TODO: Delete debugging print statement
         # print("sift_return_node called on " + (s if s else "the empty string"))
         
@@ -417,10 +417,10 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
-    def sift(self, s):
+    def __sift(self, s):
         #print("---")
         #print("sift called on " + (s if s else "the empty string"))
-        return self.sift_return_node(s).value
+        return self.__sift_return_node(s).value
     
     ##########################################################################################################
 
@@ -466,6 +466,7 @@ class Tree:
                 stack.append(to_print.right_child)
             if to_print.left_child is not None:
                 stack.append(to_print.left_child)
+            
             n = to_print
             while n.parent is not None:
                 print("\t", end="")
