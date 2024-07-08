@@ -1,11 +1,66 @@
 from teacher import Teacher
 
+import itertools as it
+import matplotlib.pyplot as plt
+import networkx as nx
 
 ##############################################################################################################
 
 class Learner:
 
     ##########################################################################################################
+
+
+    def draw_graph(self):
+
+        print("draw graph called.")
+
+        # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
+        m_graph = nx.MultiDiGraph(directed = True)
+
+        accepting = []
+
+        for row in self.m_hat:
+            # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
+
+            access_string = next(key for key in self.access_string_reference.keys() if self.access_string_reference[key] == self.m_hat.index(row))
+            print(access_string)
+
+            m_graph.add_node(self.m_hat.index(row), data=access_string)
+            if row[0] == 1:
+                accepting.append(self.m_hat.index(row))
+
+            # edge from node "row index" to node "row[i]" where it is labelled by the character in language[i]
+            for i in range(1, len(row)):
+                print(self.alphabet[i-1])
+                m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
+
+        # draw the graph
+
+        colors_node = []
+        for node in m_graph:
+            if node in accepting:
+                colors_node.append('green')
+            else:
+                colors_node.append('red')
+
+        labels_node = {n : data["data"] for n, data in m_graph.nodes(data = True)}
+
+        labels = {(u, v, key): data["data"] for u, v, key, data in m_graph.edges(keys = True, data = True)}
+
+        pos = nx.shell_layout(m_graph)
+        connectionstyle = [f"arc3,rad={r}" for r in it.accumulate([0.15] * 4)]
+        # ^^^ from this multigraph tutorial https://networkx.org/documentation/stable/auto_examples/drawing/plot_multigraphs.html
+        
+        nx.draw_networkx_nodes(m_graph, pos, node_color=colors_node)
+        nx.draw_networkx_labels(m_graph, pos, labels_node, font_size=10)
+
+        nx.draw_networkx_edges(m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
+        nx.draw_networkx_edge_labels(m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
+
+        plt.show()
+        print("plot printed.")
+
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
 
@@ -78,6 +133,12 @@ class Learner:
 
         # Append the first state to M_hat        
         self.m_hat.append(to_append)
+
+        print("m hat table: " + str(self.m_hat))
+        print("access dictionary: " + str(self.access_string_reference))
+
+        # draw m_hat graph here, as m_hat is not updated in initialization past this point
+        self.draw_graph()
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
@@ -134,10 +195,14 @@ class Learner:
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
             self.m_hat = self.construct_hypothesis()
+            # TODO: delete debugging print statements
             
-            # TODO: Delete debugging print statement
-            # print(f"m_hat updated {self.m_hat}")
+            print(f"m_hat updated {self.m_hat}")
+
+            self.draw_graph()
+            print("graph displayed.")
             
+            # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
 
