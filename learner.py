@@ -1,5 +1,6 @@
 from teacher import Teacher
 
+import itertools as it
 import matplotlib.pyplot as plt
 import networkx as nx
 
@@ -26,10 +27,42 @@ class Learner:
 
         self.access_string_reference.update({key : index})
 
-    def draw_m_hat(self):
-        pass
+    def draw_graph(self):
+
+        # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
+
+        accepting = []
+
+        for row in self.m_hat:
+                # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
+                self.m_graph.add_node(self.m_hat.index(row))
+                if row[0] == 1:
+                    accepting.append(self.m_hat.index(row))
+
+                # edge from node "row index" to node "row[i]" where it is labelled by the character in language[i]
+                for i in range(1, len(row)):
+                    self.m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
+
+        # display the graph
+
+        # TODO: make accepting nodes a different color perhaps?
+
+        labels = {(u, v, key): data["data"] for u, v, key, data in self.m_graph.edges(keys = True, data = True)}
+
+        pos = nx.shell_layout(self.m_graph)
+        connectionstyle = [f"arc3,rad={r}" for r in it.accumulate([0.15] * 4)]
+        # ^^^ from this multigraph tutorial https://networkx.org/documentation/stable/auto_examples/drawing/plot_multigraphs.html
+        
+        nx.draw_networkx_nodes(self.m_graph, pos)
+        nx.draw_networkx_labels(self.m_graph, pos, font_size=10)
+
+        nx.draw_networkx_edges(self.m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
+        nx.draw_networkx_edge_labels(self.m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
+        plt.show()
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None):
+
+        self.m_graph = nx.MultiDiGraph(directed = True)
 
         test_tree = Tree(Node("root", None))
         test_tree.root.left_child = Node("left child", test_tree.root)
