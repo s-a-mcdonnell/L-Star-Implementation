@@ -56,6 +56,13 @@ class Learner:
 
         # draw the graph
 
+        colors_node = []
+        for node in m_graph:
+            if node in accepting:
+                colors_node.append('green')
+            else:
+                colors_node.append('red')
+
         labels_node = {n : data["data"] for n, data in m_graph.nodes(data = True)}
         print("node labels: " + str(labels_node))
 
@@ -66,7 +73,7 @@ class Learner:
         connectionstyle = [f"arc3,rad={r}" for r in it.accumulate([0.15] * 4)]
         # ^^^ from this multigraph tutorial https://networkx.org/documentation/stable/auto_examples/drawing/plot_multigraphs.html
         
-        nx.draw_networkx_nodes(m_graph, pos)
+        nx.draw_networkx_nodes(m_graph, pos, node_color=colors_node)
         nx.draw_networkx_labels(m_graph, pos, labels_node, font_size=10)
 
         nx.draw_networkx_edges(m_graph, pos, edge_color="grey", connectionstyle=connectionstyle)
