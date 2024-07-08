@@ -18,17 +18,36 @@ class Learner:
             assert type(character) is str
             assert len(character) == 1
         
+
         # Initialize teacher
 
         # If a premade DFA was provided (for testing), use it
         if premade_dfa:
             self.my_teacher = Teacher(self.alphabet, premade_dfa = premade_dfa)
+        
+        # Else the DFA to be learned will be constructed by the teacher
         else:
             self.my_teacher = Teacher(self.alphabet, num_states = num_states, seed = seed)
 
+        # Initialize binary classifcation tree T and tentative hypothesis M_hat
+        self.init_t_m_hat()
+
+        # Confirm that all -1s with which M_hat was initialized have been overwritten
+        for row in self.m_hat:
+            for entry in row:
+                assert entry >= 0
+        
+        # print("m_hat at end of initialization: " + str(self.m_hat))
+
+        print("Learner initialization complete")
+
+    ##########################################################################################################
+
+    # Initialize T and M_hat
+    # Helper method for contructor
+    def init_t_m_hat(self):
         # initialize T with just the empty string (lambda)
         self.t = Tree(Node("", None, 0))
-        # lambda is not a variable name in Python due to it being used for function stuff so I'm going to call it 
 
         # create M_hat with just one state in T
         # The DFA (M) is a matrix in which the rows are the nodes
@@ -40,9 +59,8 @@ class Learner:
         # add to the dictionary when updating the tree, not when reconstructing m_hat, because we need dict to construct m_hat
         self.access_string_reference = {}
         self.update_dictionary("", 0)
-        # self.access_string_reference.update({"": 0})
 
-        # append the first state
+        # Create the first state (with the empty access string)
         # check whether empty string is accepted or rejected
         to_append = []
         if self.my_teacher.member(""):
@@ -50,19 +68,23 @@ class Learner:
             to_append.append(1)
         else:
             to_append.append(0)
+        
+        # This initial state points only to itself
         for i in range(len(self.alphabet)):
             to_append.append(0)
-        
-        # print("appending to m_hat")
+
+        # Append the first state to M_hat        
         self.m_hat.append(to_append)
     
         # equivalence query on initial M_hat
         gamma = self.my_teacher.equivalent(self.m_hat)
 
+        # If there is no counterexample, we have solved the DFA
         if not gamma:
             print("We are done. DFA is the trivial DFA.")
             self.solved = True
-        # put counterexample gamma into our tree T
+        
+        # Else put counterexample gamma into our tree T
         else:
 
             assert type(gamma) is str
@@ -81,16 +103,6 @@ class Learner:
             
             # Add counterexample to the dictionary
             self.update_dictionary(gamma, 1)
-            # self.access_string_reference.update({gamma: 1})
-
-        # Confirm that all -1s have been overwritten
-        for row in self.m_hat:
-            for entry in row:
-                assert entry >= 0
-        
-        # print("m_hat at end of initialization: " + str(self.m_hat))
-
-        print("Learner initialization complete")
 
     ##########################################################################################################
 
