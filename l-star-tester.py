@@ -56,12 +56,15 @@ def __read_dfa(loc):
         # Check that each list row of the DFA is the length of the alphabet plus 1
         print(f"to_append: {to_append}")
         if len(to_append) != len(alphabet) + 1:
-            print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}")
-            print("DFA will be randomly generated")
-            return None
+            print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}. Row will not be included in DFA to be learned.")
+            continue
 
         # Append row to DFA
         dfa.append(to_append)
+    
+    if not len(dfa):
+        print("Error: No usable lines found in dfa.txt. DFA to be learned will be randomly generated.")
+        return None
     
     # Return parsed DFA
     return dfa
