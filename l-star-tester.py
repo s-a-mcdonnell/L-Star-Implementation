@@ -53,7 +53,7 @@ def __read_dfa(loc):
             to_append.append(int(num))
 
 
-        # Check that each list row of the DFA is the length of the alphabet plus 1
+        # Check that the row of the DFA is the length of the alphabet plus 1
         print(f"to_append: {to_append}")
         if len(to_append) != len(alphabet) + 1:
             print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}. Row will not be included in DFA to be learned.")
@@ -62,6 +62,7 @@ def __read_dfa(loc):
         # Append row to DFA
         dfa.append(to_append)
     
+    # Check if all rows were deemed invalid (or if the file was blank)
     if not len(dfa):
         print("Error: No usable lines found in dfa.txt. DFA to be learned will be randomly generated.")
         return None
