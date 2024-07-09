@@ -35,6 +35,7 @@ def __read_dfa(loc):
     try:
         dfa_file = open(os.path.join(loc, "dfa.txt"), "r")
     except:
+        print("Error: No file dfa.txt found. DFA to be learned will be randomly generated.")
         return None
     
     dfa = []
@@ -54,8 +55,11 @@ def __read_dfa(loc):
 
         # Check that each list row of the DFA is the length of the alphabet plus 1
         print(f"to_append: {to_append}")
-        assert len(to_append) == len(alphabet) + 1
-        
+        if len(to_append) != len(alphabet) + 1:
+            print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}")
+            print("DFA will be randomly generated")
+            return None
+
         # Append row to DFA
         dfa.append(to_append)
     
@@ -98,8 +102,11 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 alphabet = __read_alphabet(__location__)
 print(f"alphabet: {alphabet}")
 
-# Read DFA from text file (if provided)
-dfa_for_testing = __read_dfa(__location__)
+# Read DFA from text file (if provided and not overridden by command-line args)
+if len(sys.argv) <= 2:
+    dfa_for_testing = __read_dfa(__location__)
+else:
+    dfa_for_testing = None
 
 # Create learner:
 # If command-line arguments are provided, pass them to the learner
