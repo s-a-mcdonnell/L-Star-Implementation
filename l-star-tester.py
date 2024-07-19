@@ -1,6 +1,7 @@
 from learner import Learner
 import sys
 import os
+import time
 
 ##########################################################################################################
 
@@ -118,6 +119,13 @@ elif dfa_for_testing:
 else:
     my_learner = Learner(alphabet=alphabet, display_graphs=show_graphs)
 
+start = time.time()
 
 # Let learner run
 my_learner.lstar_algorithm()
+
+end = time.time()
+
+beep = end - start
+
+print(f"Total time: {beep}")
