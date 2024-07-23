@@ -254,6 +254,8 @@ class Learner:
         
         print("End L-Star algorithm")
 
+        return self.m_hat
+
     ##########################################################################################################
 
     # Finds and returns the distinguishing string corresponding to the last (most recent) common ancestor of the access strings s1 and s2 in T

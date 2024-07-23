@@ -76,6 +76,32 @@ def __read_dfa(loc):
 
 ##########################################################################################################
 
+def __write_dfa_to_file(dfa, loc, file_name):
+    # Return None if no file is provided
+    try:
+        dfa_file = open(os.path.join(loc, file_name), "w")
+    except:
+        print(f"Error: No file {file_name} found.")
+        return
+
+    for row in dfa:
+        for entry in row:
+            dfa_file.write(str(entry))
+
+            # Space between entries in a row
+            if row.index(entry) < len(row) - 1:
+                dfa_file.write(' ')
+        
+        # New line between rows     
+        if dfa.index(row) < len(dfa) - 1:
+            dfa_file.write('\n')
+    
+    # TODO: Close file?
+
+
+##########################################################################################################
+
+
 # Print usage information
 print("Welcome to the L* Tester")
 print("This program accepts up to three command-line arguments and up to two file inputs")
@@ -132,7 +158,7 @@ else:
 start = time.time()
 
 # Run algorithm
-my_learner.lstar_algorithm()
+learned_dfa = my_learner.lstar_algorithm()
 
 end = time.time()
 
@@ -140,3 +166,13 @@ total_runtime = end - start
 
 # Print runtime
 print(f"Total runtime (seconds): {total_runtime}")
+
+# Learn movement teacher using L*
+
+
+# write DFA to a file for ease of access
+__location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
+
+__write_dfa_to_file(learned_dfa, __location__, "learned_dfa.txt")
+
+print("Learned DFA written to file")
