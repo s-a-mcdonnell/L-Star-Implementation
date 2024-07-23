@@ -294,17 +294,38 @@ class Learner:
 
     # Finds and returns the distinguishing string corresponding to the last (most recent) common ancestor of the access strings s1 and s2 in T
     def __get_lca(self, s1 , s2):
+        assert s1 != s2
+        assert s1 in self.access_string_reference.keys()
+        assert s2 in self.access_string_reference.keys()
+
+
+        print(f"__get_lca({s1}, {s2}) called")
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
         n1 = self.__sift_return_node(s1, self.t)
+        print(f"n1.value = {n1.value}, level {n1.level}")
+
         n2 = self.__sift_return_node(s2, self.t)
+        print(f"n2.value = {n2.value}, level {n2.level}")
+
+        # TODO: This assertion is failing. This means there is an error in sift.
+        assert n1 != n2
+
 
         # Travel up the tree until you've found the point in n1 and n2's family trees when they are on the same level
         while n1.level > n2.level:
             n1 = n1.parent
         
+        print("After moving n1 up:")
+        print(f"n1.value = {n1.value}, level {n1.level}")
+        print(f"n2.value = {n2.value}, level {n2.level}")
+
         while n2.level > n1.level:
             n2 = n2.parent
+        
+        print("After moving n2 up:")
+        print(f"n1.value = {n1.value}, level {n1.level}")
+        print(f"n2.value = {n2.value}, level {n2.level}")
         
         assert n1 and n2
         assert n1.level == n2.level
@@ -320,6 +341,7 @@ class Learner:
         assert n1 == n2
 
         # Return the distinguishing string assosciated with the LCA
+        print(f"__get_lca() returning {n1.value}")
         return n1.value
     
     ##########################################################################################################
@@ -337,7 +359,6 @@ class Learner:
 
 
         j = 0
-        mismatch_found = False
         # for each prefix set of characters of gamma
         for i in range(len(gamma)):
             j = i
@@ -364,14 +385,16 @@ class Learner:
                 # print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
                 # print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
                 # print("breaking loop")
-                mismatch_found = True
                 break
         
         # Assert that we haven't left the loop just because of iterating through all values of i
-        assert mismatch_found
+        assert access_string_sift != access_string_m_hat
 
         # Find the last common ancestor (lca) of access_string_sift and access_string_m_hat in T
         lca = self.__get_lca(access_string_sift, access_string_m_hat)
+        self.t.print_tree()
+        print(f"lca of {access_string_sift if access_string_sift else "empty"} and {access_string_m_hat if access_string_m_hat else "empty"} is {lca if lca else "empty"}")
+
 
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
