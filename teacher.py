@@ -51,8 +51,6 @@ class Teacher:
 
     # Constructor
     def __init__(self, alphabet, num_states = -1, seed = 1821, premade_dfa = None):
-        # TODO: Delete debugging print statement
-        # print("teacher created")
 
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
@@ -108,9 +106,9 @@ class Teacher:
                     state[i] = arrow
                     arrows_created += 1
             
-            # Print DFA
+            '''# Print DFA
             print("DFA to learn:")
-            print(self.m)
+            print(self.m)'''
 
     ##########################################################################################################
 
@@ -120,10 +118,8 @@ class Teacher:
     def equivalent(self, m_hat):
         assert m_hat
         if len(self.m[0]) != len(m_hat[0]):
-            print("Incompatable alphabet size")
+            print("Error: Incompatable alphabet size")
             return True
-
-        # print("equivalency query called")
 
         # Generate and test an arbitrarily large number of strings
         # for each of these strings, if self.member(s, self.m) is not self.member(s, m_hat), return s
@@ -133,12 +129,10 @@ class Teacher:
             if self.member(s) != self.member(s, m_hat):
                 assert(type(self.member(s)) is bool)
                 assert(type(self.member(s, m_hat)) is bool)
-                # TODO: Delete debugging print statement
-                # print("Counterexample found: " + s)
+    
                 return s            
 
         # else return false (so that the truthiness of a counterexample and a matching DFA result will be different)
-        print("No counterexample found")
         return False
 
     ##########################################################################################################
@@ -171,7 +165,6 @@ class Teacher:
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
     @memoize
     def member(self, s : str, dfa: list[list[int]] = None, alpha = None):
-        # print("membership query called")
 
         if not dfa:
             dfa = self.m

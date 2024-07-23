@@ -26,8 +26,6 @@ class Learner:
     # Draws current m_hat
     def draw_graph(self):
 
-        print("draw graph called.")
-
         # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
         m_graph = nx.MultiDiGraph(directed = True)
 
@@ -37,7 +35,6 @@ class Learner:
             # create node with label from the index, and add it to the list of accepted nodes if row[0] is 1
 
             access_string = next(key for key in self.access_string_reference.keys() if self.access_string_reference[key] == self.m_hat.index(row))
-            print(access_string)
 
             m_graph.add_node(self.m_hat.index(row), data=access_string)
             if row[0] == 1:
@@ -45,7 +42,6 @@ class Learner:
 
             # edge from node "row index" to node "row[i]" where it is labelled by the character in language[i]
             for i in range(1, len(row)):
-                print(self.alphabet[i-1])
                 m_graph.add_edge(self.m_hat.index(row), row[i], key = self.alphabet[i - 1], data = self.alphabet[i-1])
 
         # draw the graph
@@ -72,7 +68,6 @@ class Learner:
         nx.draw_networkx_edge_labels(m_graph, pos, labels, label_pos=0.25, font_size = 10, font_color="black", connectionstyle=connectionstyle, bbox={"alpha": 0})
 
         plt.show()
-        print("plot printed.")
     
     ##########################################################################################################
 
@@ -112,10 +107,6 @@ class Learner:
             for entry in row:
                 assert entry >= 0
         
-        print("m_hat at end of initialization: " + str(self.m_hat))
-
-        print("Learner initialization complete")
-
     ##########################################################################################################
 
     # Initialize T and M_hat
@@ -151,8 +142,6 @@ class Learner:
         # Append the first state to M_hat        
         self.m_hat.append(to_append)
 
-        print("m hat table: " + str(self.m_hat))
-        print("access dictionary: " + str(self.access_string_reference))
 
         # draw m_hat graph here, as m_hat is not updated in initialization past this point
         if self.graphs:
@@ -163,7 +152,6 @@ class Learner:
 
         # If there is no counterexample, we have solved the DFA
         if not gamma:
-            print("We are done. DFA is the trivial DFA.")
             self.solved = True
         
         # Else put counterexample gamma into our tree T
@@ -174,7 +162,6 @@ class Learner:
             assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
 
 
-            # print("Counterexample found, adding to tree.")
             if self.my_teacher.member(gamma):
                 self.t.root.right_child = Node(gamma, self.t.root, 1)
                 self.t.root.left_child = Node("", self.t.root, 1)
@@ -184,7 +171,6 @@ class Learner:
                 self.t.root.left_child = Node(gamma, self.t.root, 1)
             
             # Add counterexample to the dictionary
-            print("INITIALIZATION: updating dictionary with counterexample " + str(gamma))
             self.update_dictionary(gamma, 1)
 
     ##########################################################################################################
@@ -197,35 +183,27 @@ class Learner:
 
         # Print debugging information if trying to clobber a pre-existing key:
         if key in self.access_string_reference.keys():
-            print("trying to clobber key " + key)
+            print("Error: Trying to clobber key " + key)
             self.__sift(key, self.t)
-            #exit(1)
-            assert not key in self.access_string_reference.keys()
+            exit(1)
 
         self.access_string_reference.update({key : index})
 
     ##########################################################################################################
 
     def lstar_algorithm(self):
-        print("running l-star")
+        print("Running L*")
 
         while not self.solved:
             # create new M_hat from current T => call construct_hypothesis
-            self.m_hat = self.construct_hypothesis()
-            # TODO: delete debugging print statements
-            
-            print(f"m_hat updated {self.m_hat}")
+            self.m_hat = self.construct_hypothesis()            
 
             if self.graphs:
                 self.draw_graph()
-                print("graph displayed.")
             
-            # print("m_hat updated " + str(self.m_hat))
             # equivalence query => does our current M_hat equal the real M from teacher?
             gamma = self.my_teacher.equivalent(self.m_hat)
 
-            # TODO: Delete debugging print statement
-            # print("Counterexample is ===> " + str(gamma))
             if gamma:
                 # if a counterexample is provided, update T by determining the new access string and distinguishing string (sift down)
                 assert(self.my_teacher.member(gamma) != self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -234,11 +212,6 @@ class Learner:
 
                 # call update_tree (includes updating dictionary)
                 self.update_tree(gamma)
-                self.t.print_tree()
-
-                # TODO: Delete debugging print statements
-                print("number of entries in dictionary: " + str(len(self.access_string_reference)))
-                print("number of rows in M_hat: " + str(len(self.m_hat)))
 
             else:
                 # If no counterexample is provided, the DFA has been solved
@@ -264,14 +237,9 @@ class Learner:
         assert s1 in self.access_string_reference.keys()
         assert s2 in self.access_string_reference.keys()
 
-
-        print(f"__get_lca({s1}, {s2}) called")
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
         # NOTE: since these are guaranteed access strings, we can just outright use the memoize version of the function
-
-        assert s1 in self.access_string_reference.keys()
-        assert s2 in self.access_string_reference.keys()
 
         n1 = memoize(self.__sift_return_node(s1, self.t))
         n2 = memoize(self.__sift_return_node(s2, self.t))
@@ -282,16 +250,9 @@ class Learner:
         while n1.level > n2.level:
             n1 = n1.parent
         
-        print("After moving n1 up:")
-        print(f"n1.value = {n1.value}, level {n1.level}")
-        print(f"n2.value = {n2.value}, level {n2.level}")
 
         while n2.level > n1.level:
             n2 = n2.parent
-        
-        print("After moving n2 up:")
-        print(f"n1.value = {n1.value}, level {n1.level}")
-        print(f"n2.value = {n2.value}, level {n2.level}")
         
         assert n1 and n2
         assert n1.level == n2.level
@@ -307,7 +268,6 @@ class Learner:
         assert n1 == n2
 
         # Return the distinguishing string assosciated with the LCA
-        print(f"__get_lca() returning {n1.value}")
         return n1.value
     
     ##########################################################################################################
@@ -334,7 +294,7 @@ class Learner:
             else:
                 node_sift = self.__sift_return_node(strng, self.t)
             access_string_sift = node_sift.value
-            print(f"access string sift ---> {access_string_sift}")
+
             loop_d = node_sift.parent.value if node_sift.parent else ""
 
             # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
@@ -352,8 +312,6 @@ class Learner:
 
         # Find the last common ancestor (lca) of access_string_sift and access_string_m_hat in T
         lca = self.__get_lca(access_string_sift, access_string_m_hat)
-        self.t.print_tree()
-        print(f"lca of {access_string_sift if access_string_sift else "empty"} and {access_string_m_hat if access_string_m_hat else "empty"} is {lca if lca else "empty"}")
 
 
         # let j be the least i such that s[i] does not equal s_hat[i]
@@ -361,7 +319,6 @@ class Learner:
 
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
-        print("updating dictionary with " + str(gamma_j_minus_1))
         self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
         
         # Get node in tree T to edit
@@ -375,15 +332,6 @@ class Learner:
         # the last common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
         new_d = gamma[j] + lca
 
-        # print(f"access string m hat: {access_string_m_hat}")
-        # print(f"access string from sifting node: {access_string_sift}")
-        # print(f"node to edit value: {node_to_edit.value}")
-        # print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
-        # print(f"new distinguishing string: {new_d}")
-        # print(f"s[j-1] = {s_j_minus_1}")
-        # print(f"gamma[j-1] = {gamma_j_minus_1}")
-        # print(f"All access strings are: {self.access_string_reference}")
-
         assert new_d
         assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
 
@@ -393,17 +341,6 @@ class Learner:
         temp = node_to_edit.parent
         assert temp.left_child
         assert temp.right_child
-
-        print(node_to_edit)
-        print(node_to_edit.parent)
-        print(temp)
-        print(temp.left_child)
-        print(temp.right_child)
-
-        print(f"node to edit value: {node_to_edit.value if node_to_edit.value else "empty"}")
-        print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
-        print(f"temp value: {temp.value if temp.value else "empty"}")
-        print(f"temp children --> left: {temp.left_child.value if temp.left_child.value else "empty"}, right: {temp.right_child.value if temp.right_child.value else "empty"}")
 
         # assert (temp.left_child == node_to_edit) or (temp.right_child == node_to_edit)
 
@@ -432,35 +369,12 @@ class Learner:
             exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
 
-        # # Create child leaves for node_to_edit, making it an internal node
-        # assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
-        # node_to_edit.left_child = Node(None, node_to_edit, node_to_edit.level + 1)
-        # node_to_edit.right_child = Node(None, node_to_edit, node_to_edit.level + 1)
-    
-        # # Set values of node_to_edit's children
-        # # leaf nodes are the previous access string and the new access string gamma[j-1]
-        # # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string        
-        # if self.my_teacher.member(s_j_minus_1 + new_d) and not self.my_teacher.member(gamma_j_minus_1 + new_d):
-        #     node_to_edit.right_child.value =  s_j_minus_1
-        #     node_to_edit.left_child.value = gamma_j_minus_1
-        # elif self.my_teacher.member(gamma_j_minus_1 + new_d) and not self.my_teacher.member(s_j_minus_1 + new_d):
-        #     node_to_edit.right_child.value = gamma_j_minus_1
-        #     node_to_edit.left_child.value =  s_j_minus_1
-        # else:
-        #     print(f"Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
-        #     exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
-
-        # # Set node_to_edit's value to be the new distinguishing string
-        # assert node_to_edit.parent
-        # node_to_edit.value = new_d
-
     ##########################################################################################################
 
     # input: T is our classification tree
     # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
-        # TODO: Delete debugging print statement
-        # print("construct hypothesis called")
+       
         to_become = []
 
         # for each access string (leaf) of T, create a state in M_hat
@@ -477,13 +391,7 @@ class Learner:
             for i in range(len(self.alphabet)):
                 to_append.append(-1)
             
-            # TODO: Delete debugging print statements
-            # print(f"appending row to to_become for key {key}")
             to_become.append(to_append)
-        
-        #print("M_hat mid-construction: " + str(to_become))
-
-        #print("access_string_reference.keys(): " + str(self.access_string_reference.keys()))
 
         # start state of M_hat is lambda, the empty string
         # for each state in M_hat and each symbol b in the language, compute the b-transition out of the access string s:
@@ -494,11 +402,7 @@ class Learner:
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
-                # TODO: Delete debugging print statements
-                #print("dictionary: " + str(self.access_string_reference))
-                #print("key: " + key)
-                #print("row index: " + str(self.access_string_reference[key]))
-                #print("rows in to_become: " + str(len(to_become)))
+            
                 to_become[self.access_string_reference[key]][self.alphabet.index(b) + 1] = to_direct
 
         # Ensure that all -1s have been overwritten
@@ -506,9 +410,6 @@ class Learner:
             for entry in row:
                 assert entry >= 0
 
-        # TODO: Delete debugging print statements
-        # print("new m_hat:")
-        # print(to_become)
         return to_become
 
     ##########################################################################################################
@@ -516,8 +417,6 @@ class Learner:
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
     def __sift_return_node(self, s, tr):
-        # TODO: Delete debugging print statement
-        # print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
         current = tr.root
@@ -529,9 +428,6 @@ class Learner:
                         
             # d is distinguishing string at current node
             d = current.value
-
-            #print("current.value: " + d)
-            #print(s + " + " + d + " is " + ("accepted" if self.my_teacher.member(s+d) else "rejected") + " by M")
 
             # membership query on sd (concatenated) 
             # if membership query is accepted, current node is right child of current node
@@ -546,8 +442,6 @@ class Learner:
         # NOTE: We have reached this point because current does not have a left child.
         # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
         assert not current.right_child
-
-        #print("loops to find leaf: " + str(loops_to_find_leaf))
 
         # Check that access string is properly stored
         assert (current.value in self.access_string_reference.keys())

@@ -45,7 +45,6 @@ def __read_dfa(loc):
 
         # Parsing the text file
         line_parts = line.split(" ")
-        print(f"line_parts: {line_parts}")
 
         # Assert that the first entry in each row is a boolean value (0 or 1) representing whether the node is an accept or reject state
         assert int(line_parts[0]) == 0 or int(line_parts[0]) == 1
@@ -58,7 +57,6 @@ def __read_dfa(loc):
 
 
         # Check that the row of the DFA is the length of the alphabet plus 1
-        print(f"to_append: {to_append}")
         if len(to_append) != len(alphabet) + 1:
             print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}. Row will not be included in DFA to be learned.")
             continue
@@ -134,7 +132,7 @@ if len(sys.argv) > 3:
 # Import alphabet from text file (if provided, else use binary alphabet)
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
 alphabet = __read_alphabet(__location__)
-print(f"alphabet: {alphabet}")
+print(f"Alphabet: {alphabet}")
 
 # Read DFA from text file (if provided and not overridden by command-line args)
 if len(sys.argv) <= 2:
