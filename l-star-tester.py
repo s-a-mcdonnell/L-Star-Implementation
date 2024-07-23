@@ -47,6 +47,9 @@ def __read_dfa(loc):
         line_parts = line.split(" ")
         print(f"line_parts: {line_parts}")
 
+        # Assert that the first entry in each row is a boolean value (0 or 1) representing whether the node is an accept or reject state
+        assert int(line_parts[0]) == 0 or int(line_parts[0]) == 1
+
         to_append = []
 
         # Save each int in the text file to the to_append list for that row
