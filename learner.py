@@ -4,6 +4,50 @@ import itertools as it
 import matplotlib.pyplot as plt
 import networkx as nx
 
+import functools
+import collections.abc
+
+class memoized(object):
+    '''Decorator. Caches a function's return value each time it is called.
+    If called later with the same arguments, the cached value is returned
+    (not reevaluated).
+    '''
+
+    def __init__(self, func):
+        self.func = func
+        self.cache = {}
+
+    def __call__(self, *args):
+        if not isinstance(args, collections.abc.Hashable):
+            # uncacheable. a list, for instance.
+            # better to not cache than blow up.
+            return self.func(*args)
+        if args in self.cache:
+            return self.cache[args]
+        else:
+            value = self.func(*args)
+            self.cache[args] = value
+            return value
+        
+    def __repr__(self):
+        '''Return the function's docstring.'''
+        return self.func.__doc__
+    
+    def __get__(self, obj, objtype):
+        '''Support instance methods.'''
+        return functools.partial(self.__call__, obj)
+
+def memoize(obj):
+    cache = obj.cache = {}
+
+    @functools.wraps(obj)
+    def memoizer(*args, **kwargs):
+        key = str(args) + str(kwargs)
+        if key not in cache:
+            cache[key] = obj(*args, **kwargs)
+        return cache[key]
+    return memoizer
+
 ##############################################################################################################
 
 class Learner:
@@ -99,7 +143,7 @@ class Learner:
             for entry in row:
                 assert entry >= 0
         
-        # print("m_hat at end of initialization: " + str(self.m_hat))
+        print("m_hat at end of initialization: " + str(self.m_hat))
 
         print("Learner initialization complete")
 
@@ -171,6 +215,7 @@ class Learner:
                 self.t.root.left_child = Node(gamma, self.t.root, 1)
             
             # Add counterexample to the dictionary
+            print("INITIALIZATION: updating dictionary with counterexample " + str(gamma))
             self.update_dictionary(gamma, 1)
 
     ##########################################################################################################
@@ -186,7 +231,7 @@ class Learner:
         # Print debugging information if trying to clobber a pre-existing key:
         if key in self.access_string_reference.keys():
             print("trying to clobber key " + key)
-            self.__sift(key)
+            self.__sift(key, self.t)
             #exit(1)
             assert not key in self.access_string_reference.keys()
 
@@ -222,10 +267,11 @@ class Learner:
 
                 # call update_tree (includes updating dictionary)
                 self.update_tree(gamma)
+                self.t.print_tree()
 
                 # TODO: Delete debugging print statements
-                # print("number of entries in dictionary: " + str(len(self.access_string_reference)))
-                # print("number of rows in M_hat: " + str(len(self.m_hat)))
+                print("number of entries in dictionary: " + str(len(self.access_string_reference)))
+                print("number of rows in M_hat: " + str(len(self.m_hat)))
 
             else:
                 # If no counterexample is provided, the DFA has been solved
@@ -250,8 +296,8 @@ class Learner:
     def __get_lca(self, s1 , s2):
         # Get the tree nodes corresponding to the two passed access strings
         # NOTE: We could also have passed n1 instead of s1 to this method, but we would need to sift for s2 (which comes from M_hat) regardless
-        n1 = self.__sift_return_node(s1)
-        n2 = self.__sift_return_node(s2)
+        n1 = self.__sift_return_node(s1, self.t)
+        n2 = self.__sift_return_node(s2, self.t)
 
         # Travel up the tree until you've found the point in n1 and n2's family trees when they are on the same level
         while n1.level > n2.level:
@@ -299,8 +345,9 @@ class Learner:
             # Get the first i characters of gamma
             strng = gamma[0 : i + 1]
             # sift gamma[i] in T
-            node_sift = self.__sift_return_node(strng)
+            node_sift = self.__sift_return_node(strng, self.t)
             access_string_sift = node_sift.value
+            print(f"access string sift ---> {access_string_sift}")
             loop_d = node_sift.parent.value if node_sift.parent else ""
 
             # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
@@ -333,56 +380,79 @@ class Learner:
 
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
+        print("updating dictionary with " + str(gamma_j_minus_1))
         self.update_dictionary(gamma_j_minus_1, len(self.access_string_reference))
         
         # Get node in tree T to edit
-        node_to_edit = self.__sift_return_node(gamma_j_minus_1)
+        node_to_edit = self.__sift_return_node(gamma_j_minus_1, self.t)
         s_j_minus_1 = node_to_edit.value
     
         # The new distinguishing string is the character gamma[j] concatonated with
         # the last common ancestor distinguishing string between access_string_sift and access_string_m_hat in T
         new_d = gamma[j] + lca
 
+        print(f"access string m hat: {access_string_m_hat}")
+        print(f"access string from sifting node: {access_string_sift}")
+        print(f"node to edit value: {node_to_edit.value}")
+        print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
+        print(f"new distinguishing string: {new_d}")
+        print(f"s[j-1] = {s_j_minus_1}")
+        print(f"gamma[j-1] = {gamma_j_minus_1}")
+        print(f"All access strings are: {self.access_string_reference}")
 
         assert new_d
         assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
 
         # TODO: Delete debugging print statements
-        # print(f"node to edit value: {node_to_edit.value}")
-        # print(f"node to edit parent value: {(node_to_edit.parent.value if node_to_edit.parent.value else "empty") if node_to_edit.parent else "no parent"}")
-        # print(f"new distinguishing string: {new_d}")
-        # print(f"s[j-1] = {s_j_minus_1}")
-        # print(f"gamma[j-1] = {gamma_j_minus_1}")
 
-        # self.t.print_tree()
-        # print(self.m_hat)
+         # create a parent for our new node
+        temp = node_to_edit.parent
+        node_to_edit.parent = Node(None, temp, node_to_edit.level)
+        node_to_edit.level += 1
+        # set parent value to distinguishing string
+        node_to_edit.parent.value = new_d
+        if(temp.left_child == node_to_edit):
+            temp.left_child = node_to_edit.parent
+        else:
+            assert temp.right_child == node_to_edit
+            temp.right_child = node_to_edit.parent
 
-
-    
-        # Create child leaves for node_to_edit, making it an internal node
+        # determine whether our current "node to edit", which contains the access string, is left or right child (acc/rej)
         assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
-        node_to_edit.left_child = Node(None, node_to_edit, node_to_edit.level + 1)
-        node_to_edit.right_child = Node(None, node_to_edit, node_to_edit.level + 1)
-    
-        # Set values of node_to_edit's children
-        # leaf nodes are the previous access string and the new access string gamma[j-1]
-        # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string        
+        # this statement should still be true because we have not changed the child of our NEW PARENT to node_to_edit
+
         if self.my_teacher.member(s_j_minus_1 + new_d) and not self.my_teacher.member(gamma_j_minus_1 + new_d):
-            node_to_edit.right_child.value =  s_j_minus_1
-            node_to_edit.left_child.value = gamma_j_minus_1
+            node_to_edit.parent.right_child = node_to_edit
+            node_to_edit.parent.left_child = Node(gamma_j_minus_1, node_to_edit.parent, node_to_edit.level)
         elif self.my_teacher.member(gamma_j_minus_1 + new_d) and not self.my_teacher.member(s_j_minus_1 + new_d):
-            node_to_edit.right_child.value = gamma_j_minus_1
-            node_to_edit.left_child.value =  s_j_minus_1
+            node_to_edit.parent.left_child = node_to_edit
+            node_to_edit.parent.right_child = Node(gamma_j_minus_1, node_to_edit.parent, node_to_edit.level)
         else:
             print(f"Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
             exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
-        # Set node_to_edit's value to be the new distinguishing string
-        assert node_to_edit.parent
-        node_to_edit.value = new_d
 
-        # TODO: Delete debugging print statement
-        # print("update tree done.")
+        # # Create child leaves for node_to_edit, making it an internal node
+        # assert (not node_to_edit.left_child) and (not node_to_edit.right_child)
+        # node_to_edit.left_child = Node(None, node_to_edit, node_to_edit.level + 1)
+        # node_to_edit.right_child = Node(None, node_to_edit, node_to_edit.level + 1)
+    
+        # # Set values of node_to_edit's children
+        # # leaf nodes are the previous access string and the new access string gamma[j-1]
+        # # Determine which leaf node goes on each side by checking membership when concatenated with the new distinguishing string        
+        # if self.my_teacher.member(s_j_minus_1 + new_d) and not self.my_teacher.member(gamma_j_minus_1 + new_d):
+        #     node_to_edit.right_child.value =  s_j_minus_1
+        #     node_to_edit.left_child.value = gamma_j_minus_1
+        # elif self.my_teacher.member(gamma_j_minus_1 + new_d) and not self.my_teacher.member(s_j_minus_1 + new_d):
+        #     node_to_edit.right_child.value = gamma_j_minus_1
+        #     node_to_edit.left_child.value =  s_j_minus_1
+        # else:
+        #     print(f"Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
+        #     exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
+
+        # # Set node_to_edit's value to be the new distinguishing string
+        # assert node_to_edit.parent
+        # node_to_edit.value = new_d
 
     ##########################################################################################################
 
@@ -420,7 +490,7 @@ class Learner:
         for key in self.access_string_reference.keys():
             # for each symbol b in the language, sift
             for b in self.alphabet:
-                resulting_state = self.__sift(key + b)
+                resulting_state = self.__sift(key + b, self.t)
                 # direct the b-transition out of s to the resulting sifted state in M_hat
                 to_direct = self.access_string_reference[resulting_state]
                 # set TO BECOME [ index of key string ] [ index of character b in alphabet ] to be equal to to_direct
@@ -445,12 +515,13 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: leaf NODE (not access string) in T for the state of M accessed by s
-    def __sift_return_node(self, s):
+    @memoized
+    def __sift_return_node(self, s, tr):
         # TODO: Delete debugging print statement
         # print("sift_return_node called on " + (s if s else "the empty string"))
         
         # set current node to root of T
-        current = self.t.root
+        current = tr.root
 
         loops_to_find_leaf = 0
 
@@ -491,10 +562,10 @@ class Learner:
 
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
-    def __sift(self, s):
+    def __sift(self, s, tr):
         #print("---")
         #print("sift called on " + (s if s else "the empty string"))
-        return self.__sift_return_node(s).value
+        return self.__sift_return_node(s, tr).value
     
     ##########################################################################################################
 
