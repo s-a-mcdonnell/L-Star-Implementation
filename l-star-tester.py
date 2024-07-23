@@ -139,4 +139,4 @@ end = time.time()
 total_runtime = end - start
 
 # Print runtime
-print(f"Total time: {total_runtime}")
+print(f"Total runtime (seconds): {total_runtime}")

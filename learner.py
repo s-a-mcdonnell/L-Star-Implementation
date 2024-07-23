@@ -192,8 +192,6 @@ class Learner:
     # Updates the access string reference dictionary with the given values
     # Isolated to its own method for debugging purposes (prevent clobbering)
     def update_dictionary(self, key : str, index : int):
-        # TODO: Delete debugging print statement
-        # print("adding key " + key + " to dictionary")
         
         # assert (not key in self.access_string_reference.keys()) 
 
@@ -245,9 +243,6 @@ class Learner:
             else:
                 # If no counterexample is provided, the DFA has been solved
                 self.solved = True
-
-            # TODO: Delete debugging print statement
-            # print("LOOP COMPLETE IN L STAR")
 
         # If we have exited the loop, we have solved the DFA
         # if yes we are done
@@ -319,9 +314,6 @@ class Learner:
     # output: Edits T to update it (returns nothing)
     # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
-        # TODO: Delete debugging print statements
-        # print("Update tree called")
-        # print(f"Updating the tree with {gamma}")
 
         # Assert that gamma really is a counterexample
         assert bool(self.my_teacher.member(gamma)) != bool(self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -350,13 +342,7 @@ class Learner:
             access_string_m_hat = list(my_dict.keys())[list(my_dict.values()).index(row_in_m_hat)]
             
             # Repeat loop until sifting and running the truncated string through M_hat lead to distinct states (different access strings/row indices in M_hat)
-            #if self.access_string_reference[access_string] != self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet)):
             if access_string_sift != access_string_m_hat:
-                # TODO: Delete debugging print statements
-                # print(f"strng {strng}")
-                # print(f"Access string from sifting: {access_string_sift if access_string_sift else "empty string"}")
-                # print(f"Access string from M_hat: {access_string_m_hat if access_string_m_hat else "empty string"}")
-                # print("breaking loop")
                 break
         
         # Assert that we haven't left the loop just because of iterating through all values of i
@@ -370,8 +356,6 @@ class Learner:
 
         # let j be the least i such that s[i] does not equal s_hat[i]
         gamma_j_minus_1 = gamma[0 : j]
-        # TODO: Delete debugging print statement
-        #print(f"gamma[j-1]: {gamma_j_minus_1}, j = {j}")
 
         # Update dictionary with access string
         assert(gamma_j_minus_1 != "")
@@ -567,8 +551,6 @@ class Learner:
         assert (current.value in self.access_string_reference.keys())
         
         # Return the access string at the leaf found
-        # TODO: Delete debugging print statement
-        # print(f"ending sift after {loops_to_find_leaf} loops. returning NODE {self.access_string_reference[current.value]} with access string {current.value if current.value else "empty"}")
         return current
 
     ##########################################################################################################
@@ -576,8 +558,6 @@ class Learner:
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
     def __sift(self, s, tr):
-        #print("---")
-        #print("sift called on " + (s if s else "the empty string"))
         if s in self.access_string_reference.keys():
             return memoize(self.__sift_return_node(s, tr)).value
         
