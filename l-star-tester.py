@@ -133,6 +133,7 @@ my_learner.lstar_algorithm()
 
 end = time.time()
 
-beep = end - start
+total_runtime = end - start
 
-print(f"Total time: {beep}")
+# Print runtime
+print(f"Total time: {total_runtime}")
