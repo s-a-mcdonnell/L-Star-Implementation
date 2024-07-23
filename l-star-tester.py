@@ -36,6 +36,7 @@ def __read_dfa(loc):
     try:
         dfa_file = open(os.path.join(loc, "dfa.txt"), "r")
     except:
+        print("Error: No file dfa.txt found. DFA to be learned will be randomly generated.")
         return None
     
     dfa = []
@@ -46,6 +47,9 @@ def __read_dfa(loc):
         line_parts = line.split(" ")
         print(f"line_parts: {line_parts}")
 
+        # Assert that the first entry in each row is a boolean value (0 or 1) representing whether the node is an accept or reject state
+        assert int(line_parts[0]) == 0 or int(line_parts[0]) == 1
+
         to_append = []
 
         # Save each int in the text file to the to_append list for that row
@@ -53,12 +57,19 @@ def __read_dfa(loc):
             to_append.append(int(num))
 
 
-        # Check that each list row of the DFA is the length of the alphabet plus 1
+        # Check that the row of the DFA is the length of the alphabet plus 1
         print(f"to_append: {to_append}")
-        assert len(to_append) == len(alphabet) + 1
-        
+        if len(to_append) != len(alphabet) + 1:
+            print(f"Error: DFA row size {len(to_append)} incompatible with alphabet of size {len(alphabet)}. Row will not be included in DFA to be learned.")
+            continue
+
         # Append row to DFA
         dfa.append(to_append)
+    
+    # Check if all rows were deemed invalid (or if the file was blank)
+    if not len(dfa):
+        print("Error: No usable lines found in dfa.txt. DFA to be learned will be randomly generated.")
+        return None
     
     # Return parsed DFA
     return dfa
@@ -72,6 +83,7 @@ print("Command-line arguments: Boolean (True or False, 1 or 0) indicating whethe
 print("File inputs: The alphabet to use (alphabet.txt) and a pre-made DFA for testing (dfa.txt)")
 print("----------")
 
+# Parse inputs:
 # Use first command-line argument (if present) to determine whether or not to show graphs (default is not)
 show_graphs = False
 if len(sys.argv) > 1:
@@ -83,13 +95,13 @@ if len(sys.argv) > 1:
         print(f"Error: Invalid boolean specifying if graphs are to be shown: {sys.argv[1]}")
         print("Graphs will not be shown")
 
+# Set number of states in DFA (if provided)
 num_states = -1
-
 if len(sys.argv) > 2:
     num_states = int(sys.argv[2])
 
+# Set seed for pseudo-random number generation (if provided)
 seed = 1821
-
 if len(sys.argv) > 3:
     seed = int(sys.argv[3])
 
@@ -98,15 +110,13 @@ __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file
 alphabet = __read_alphabet(__location__)
 print(f"alphabet: {alphabet}")
 
-# Read DFA from text file (if provided)
-dfa_for_testing = __read_dfa(__location__)
+# Read DFA from text file (if provided and not overridden by command-line args)
+if len(sys.argv) <= 2:
+    dfa_for_testing = __read_dfa(__location__)
+else:
+    dfa_for_testing = None
 
-
-
-# Create learner
-
-
-
+# Create learner:
 # If command-line arguments are provided, pass them to the learner
 if len(sys.argv) > 2:
     my_learner = Learner(alphabet, num_states = num_states, seed = seed, display_graphs=show_graphs)
@@ -121,11 +131,12 @@ else:
 
 start = time.time()
 
-# Let learner run
+# Run algorithm
 my_learner.lstar_algorithm()
 
 end = time.time()
 
-beep = end - start
+total_runtime = end - start
 
-print(f"Total time: {beep}")
+# Print runtime
+print(f"Total time: {total_runtime}")
