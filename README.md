@@ -19,3 +19,5 @@ The alphabet provided in the file `alphabet.txt` can be of any size, with each r
 When `run_l_star.py` is run, the learned DFA is written to `learned_dfa.txt` and printed to terminal along with the tree T that represents how it was stored internally as the algorithm ran.
 
 Required Python libraries are listed in `requirements.txt`.
+
+Created by Skyler McDonnell (@s-a-mcdonnell) and Allison Klingler (@amklinglerr) in Professor Scott Alfeld's lab as part of the Amherst College Summer Science Undergraduate Research Fellowship (SURF) 2024.
