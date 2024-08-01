@@ -3,7 +3,8 @@ import functools
 import collections.abc
 
 class memoized(object):
-    '''Decorator. Caches a function's return value each time it is called.
+    '''
+    Decorator. Caches a function's return value each time it is called.
     If called later with the same arguments, the cached value is returned
     (not reevaluated).
     '''
@@ -33,6 +34,9 @@ class memoized(object):
         return functools.partial(self.__call__, obj)
     
 def memoize(obj):
+    '''
+    Method used for memoization
+    '''
     cache = obj.cache = {}
 
     @functools.wraps(obj)
@@ -49,8 +53,14 @@ class Teacher:
 
     ##########################################################################################################
 
-    # Constructor
     def __init__(self, alphabet, num_states = -1, seed = 1821, premade_dfa = None):
+        '''
+        Teacher constructor
+        :param alphabet: the alphabet used for the Teacher's DFA M
+        :param num_states: an int representing the number of states in the teacher DFA
+        :param seed: seed for a randomly generated DFA, if applicable
+        :param premade_dfa: a premade DFA, in the form of an array, to be the DFA M for the teacher, if applicable
+        '''
 
         # The teacher will use the provided alphabet
         self.alphabet = alphabet
@@ -112,10 +122,13 @@ class Teacher:
 
     ##########################################################################################################
 
-    # equivalency query
-    # takes the DFA hypothesis m_hat
-    # returns either a counterexample or False (indicating that the DFAs match)
     def equivalent(self, m_hat):
+        '''
+        An equivalence query which determines if two DFAs, M and M_Hat, are equivalent.
+        Returns either False if the DFAs are equivalent (to represent the lack of a countereaxmple).
+        If the DFAs are not equivalent, return a counterexample string (a string that one DFA accepts and the other rejects)
+        :param m_hat: the DFA being compared to Teacher's DFA (M)
+        '''
         assert m_hat
         if len(self.m[0]) != len(m_hat[0]):
             print("Error: Incompatable alphabet size")
@@ -139,6 +152,12 @@ class Teacher:
     
     @staticmethod
     def final_state(s : str, dfa: list[list[int]], alpha):
+        '''
+        Static method that returns the state in a specified DFA from a string (ie whether that string is rejected or accepted).
+        :param s: the string we are checking
+        :param dfa: the dfa we are putting the string through
+        :param alpha: the alphabet that the string and the dfa share
+        '''
 
         input = []
 
@@ -165,6 +184,12 @@ class Teacher:
     # takes a string s and returns a boolean indicating whether s is accepted or rejected by the given DFA
     @memoize
     def member(self, s : str, dfa: list[list[int]] = None, alpha = None):
+        '''
+        Membership query
+        :param s: a string to query
+        :param dfa: a DFA represented as a 2D list
+        returns a boolean indicating whether s is accepted or rejected by the given DFA
+        '''
 
         if not dfa:
             dfa = self.m
@@ -179,6 +204,10 @@ class Teacher:
     ##########################################################################################################
 
     def generate_string(self):
+        '''
+        Generates an returns a string of random length using characters from the alphabet
+        Helper method for equivalent()
+        '''
 
         strg = ""
             
