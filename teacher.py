@@ -72,7 +72,7 @@ class Teacher:
         else:
             # Determine the number of states in the DFA (between 1 and 100, inclusive)
             # NOTE: The upper limit here is arbitrarily chosen
-            # NOTE: Not all of these will be accessible, depending on how the arrows point
+            # NOTE: Not all states will necessarily be accessible, depending on how the arrows point (some states may be unreachable)
             if num_states == -1:
                 num_states = random.randint(1, 100)
 

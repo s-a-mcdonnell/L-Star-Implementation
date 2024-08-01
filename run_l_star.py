@@ -26,6 +26,8 @@ def __read_alphabet(loc):
         # Add character to alphabet
         alpha.append(line[0])
     
+    alpha_file.close()
+    
     return alpha
 
 ##########################################################################################################
@@ -69,6 +71,8 @@ def __read_dfa(loc):
         print("Error: No usable lines found in dfa.txt. DFA to be learned will be randomly generated.")
         return None
     
+    dfa_file.close()
+    
     # Return parsed DFA
     return dfa
 
@@ -94,7 +98,7 @@ def __write_dfa_to_file(dfa, loc, file_name):
         if dfa.index(row) < len(dfa) - 1:
             dfa_file.write('\n')
     
-    # TODO: Close file?
+    dfa_file.close()
 
 
 ##########################################################################################################

@@ -274,7 +274,6 @@ class Learner:
 
     # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
     # output: Edits T to update it (returns nothing)
-    # NOTE: remember to SET THE PARENT of a new node when you declare it
     def update_tree(self, gamma):
 
         # Assert that gamma really is a counterexample
@@ -298,7 +297,6 @@ class Learner:
             loop_d = node_sift.parent.value if node_sift.parent else ""
 
             # Accessing dictionary key from value according to these instructions: https://www.geeksforgeeks.org/python-get-key-from-value-in-dictionary/#
-            # TODO: This is a janky way to be using a dictionary. Is this the best-suited ADT for our purposes?
             row_in_m_hat = self.m_hat.index(Teacher.final_state(strng, self.m_hat, self.alphabet))
             my_dict = self.access_string_reference
             access_string_m_hat = list(my_dict.keys())[list(my_dict.values()).index(row_in_m_hat)]
@@ -335,8 +333,6 @@ class Learner:
         assert new_d
         assert self.my_teacher.member(s_j_minus_1 + new_d) != self.my_teacher.member(gamma_j_minus_1 + new_d)
 
-        # TODO: Delete debugging print statements
-
         # create a parent for our new node
         temp = node_to_edit.parent
         assert temp.left_child
@@ -365,7 +361,7 @@ class Learner:
             node_to_edit.parent.left_child = node_to_edit
             node_to_edit.parent.right_child = Node(gamma_j_minus_1, node_to_edit.parent, node_to_edit.level)
         else:
-            print(f"Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
+            print(f"Error: Both {s_j_minus_1 + new_d} and {gamma_j_minus_1 + new_d} are {"accepted" if self.my_teacher.member(s_j_minus_1 + new_d) else "rejected"}")
             exit(f"Error: Unable to sort access string {gamma_j_minus_1} into T")
 
 
@@ -439,7 +435,7 @@ class Learner:
             
             loops_to_find_leaf += 1
                     
-        # NOTE: We have reached this point because current does not have a left child.
+        # We have reached this point because current does not have a left child.
         # Because each tree node should have either 0 or 2 children (not 1), this means that current should also not have a right child
         assert not current.right_child
 
