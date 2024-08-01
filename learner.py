@@ -23,8 +23,11 @@ class Learner:
 
     ##########################################################################################################
 
-    # Draws current m_hat
     def draw_graph(self):
+        '''
+        Draws current, a graph representing the current DFA M_Hat using Networkx.   
+        Graphs are set off to default but can be enabled with a command line prompt when running any of the testing files
+        '''
 
         # turn the m_hat array into the graph (add appropriate nodes and edges based on table)
         m_graph = nx.MultiDiGraph(directed = True)
@@ -72,6 +75,14 @@ class Learner:
     ##########################################################################################################
 
     def __init__(self, alphabet = ['0','1'], num_states = -1, seed = -1, premade_dfa = None, display_graphs = False):
+        '''
+        Initializes the learner
+        :param alphabet: the alphabet the DFA is using (defaults to binary) (assumed to be in List form otherwise)
+        :param num_states: number of states to be created in a randomly generated DFA for the teacher
+        :param seed: seed to be used for a randomly generated teacher DFA if applicable
+        :param premade_dfa: the premade Teacher DFA if applicable
+        :param display_graphs: boolean value for if graphs should be drawn of M_Hat as the program progresses
+        '''
 
         self.solved = False
         # Intialize alphabet
@@ -109,9 +120,12 @@ class Learner:
         
     ##########################################################################################################
 
-    # Initialize T and M_hat
-    # Helper method for contructor
     def init_t_m_hat(self):
+        '''
+        Initialize the Tree T and the initial M_Hat with the empty initial string and one other state.
+        Helper method for constructor __init__.
+        '''
+
         # initialize T with just the empty string (lambda)
         self.t = Tree(Node("", None, 0))
 
@@ -175,9 +189,12 @@ class Learner:
 
     ##########################################################################################################
 
-    # Updates the access string reference dictionary with the given values
-    # Isolated to its own method for debugging purposes (prevent clobbering)
     def update_dictionary(self, key : str, index : int):
+        '''
+        updates the variable access_string_reference (dictionary) with the given values
+        :param key: the key in the key,value pair being added to the dictionary
+        :param index: the value in the key value pair, which represnts the index in the matrix of the acess string being added
+        '''
         
         # assert (not key in self.access_string_reference.keys()) 
 
@@ -192,6 +209,8 @@ class Learner:
     ##########################################################################################################
 
     def lstar_algorithm(self):
+        '''runs Anlguin's L-Star algorithm and prints the learned DFA and its tree upon completion'''
+
         print("Running L*")
 
         while not self.solved:
@@ -231,8 +250,13 @@ class Learner:
 
     ##########################################################################################################
 
-    # Finds and returns the distinguishing string corresponding to the last (most recent) common ancestor of the access strings s1 and s2 in T
     def __get_lca(self, s1 , s2):
+        '''
+        returns the distinguishing string corresponding to the last (most recent) common ancestor of the access strings s1 and s2 in tree T
+        :param s1: access string 1
+        :param s2: access string 2
+        '''
+
         assert s1 != s2
         assert s1 in self.access_string_reference.keys()
         assert s2 in self.access_string_reference.keys()
@@ -272,9 +296,12 @@ class Learner:
     
     ##########################################################################################################
 
-    # input: gamma (a counterexample generated from an equivalence query) and our tree T (from self)
-    # output: Edits T to update it (returns nothing)
     def update_tree(self, gamma):
+        '''
+        takes in a counterexaple and edits the Classification Tree T to update it with the new string and sift all other affected strings
+        NOTE: does not return the tree but updates it within the method
+        :param gamma: new counterexample provided by equivalence query that needs to be sifted down the tree
+        '''
 
         # Assert that gamma really is a counterexample
         assert bool(self.my_teacher.member(gamma)) != bool(self.my_teacher.member(gamma, self.m_hat, self.alphabet))
@@ -367,9 +394,11 @@ class Learner:
 
     ##########################################################################################################
 
-    # input: T is our classification tree
-    # output: hypothesis M_hat constructed from T
     def construct_hypothesis(self):
+        '''
+        Constructs a hypothesized DFA M_Hat from the classification tree self.t.
+        Returns array representing the DFA
+        '''
        
         to_become = []
 
@@ -410,9 +439,12 @@ class Learner:
 
     ##########################################################################################################
 
-    # input: s is the string being sifted and T is our tree
-    # output: leaf NODE (not access string) in T for the state of M accessed by s
     def __sift_return_node(self, s, tr):
+        '''
+        sifts string s through the Tree T and returns the leaf NODE (not the access string, which is the Node's value) in T for the state in M accessed by string s
+        :param s: the string being sifted
+        NOTE: this function will be called as a memoized version of itself if the param s is an access string
+        '''
         
         # set current node to root of T
         current = tr.root
@@ -450,6 +482,12 @@ class Learner:
     # input: s is the string being sifted and T is our tree
     # output: access string in T for the state of M accessed by s
     def __sift(self, s, tr):
+        '''
+        Returns the access string from tree T associated with the state of M accessed by string s.
+        Calls sift_return_node and then returns the value from the node.
+        :param s: the string s being sifted
+        '''
+
         if s in self.access_string_reference.keys():
             return memoize(self.__sift_return_node(s, tr)).value
         
@@ -464,6 +502,12 @@ class Node:
     ##########################################################################################################
 
     def __init__(self, value : str, parent, level):
+        '''
+        Node constructor
+        :param value: the string stored in the node
+        :param parent: the Node that is self's parent
+        :param level: an int representing the level of the Node in T (root = 0)
+        '''
         self.value = value
 
         self.parent = parent
@@ -484,12 +528,18 @@ class Tree:
     ##########################################################################################################
 
     def __init__(self, root: Node):
+        '''
+        Tree constructor
+        :param root: the Node that is the root of the tree
+        '''
         self.root = root
 
     ##########################################################################################################
 
-    # other methods go here ie sorting stuff
     def print_tree(self):
+        '''
+        Prints the tree to terminal
+        '''
         stack = []
         stack.append(self.root)
         while stack:
