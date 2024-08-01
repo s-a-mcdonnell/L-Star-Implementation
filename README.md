@@ -16,6 +16,6 @@ For example, the following text represents a DFA that accepts all strings contai
 
 The alphabet provided in the file `alphabet.txt` can be of any size, with each row in alphabet.txt containing one character. If no alphabet is provided, the default alphabet is binary (0 and 1). For ease of reading the learned DFA, it is recommended to order the characters in the alphabet in an intuitive manner (eg. a hexademical alphabet would be ordered 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, f), but this decision is left to the user.
 
-When `run_l_star.py` is run, the learned DFA is written to `learned_dfa.txt`.
+When `run_l_star.py` is run, the learned DFA is written to `learned_dfa.txt` and printed to terminal along with the tree T that represents how it was stored internally as the algorithm ran.
 
-Required Python libraries are listed in requirements.txt
+Required Python libraries are listed in `requirements.txt`.
