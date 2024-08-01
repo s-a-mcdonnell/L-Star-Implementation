@@ -5,8 +5,11 @@ import time
 
 ##########################################################################################################
 
-# Reads chars from the alphabet file and returns list storing alphabet
 def __read_alphabet(loc):
+    '''
+    Reads chars from the alphabet file and returns list storing alphabet
+    :param loc: the location (path to the directory) in which the alphabet file is stored
+    '''
 
     # Default alphabet is 0 and 1
     try:
@@ -32,8 +35,12 @@ def __read_alphabet(loc):
 
 ##########################################################################################################
 
-# Reads lines from the DFA file and returns matrix (2d list) storing DFA
 def __read_dfa(loc):
+    '''
+    Reads lines from the DFA file and returns matrix (2d list) storing DFA
+    :param loc: the location (path to the directory) in which the DFA file is stored
+
+    '''
     # Return None if no file is provided
     try:
         dfa_file = open(os.path.join(loc, "dfa.txt"), "r")
@@ -79,6 +86,12 @@ def __read_dfa(loc):
 ##########################################################################################################
 
 def __write_dfa_to_file(dfa, loc, file_name):
+    '''
+    Writes the learned DFA to a file
+    :param loc: the location (path to the directory) in which the learned DFA file will be stored
+    :param file_name: a string representing the name of the file to which the DFA will be written
+
+    '''
     # Return None if no file is provided
     try:
         dfa_file = open(os.path.join(loc, file_name), "w")
@@ -168,9 +181,6 @@ total_runtime = end - start
 
 # Print runtime
 print(f"Total runtime (seconds): {total_runtime}")
-
-# Learn movement teacher using L*
-
 
 # write DFA to a file for ease of access
 __location__ = os.path.realpath(os.path.join(os.getcwd(), os.path.dirname(__file__)))
